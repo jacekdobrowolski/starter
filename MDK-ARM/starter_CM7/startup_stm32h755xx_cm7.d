@@ -1,0 +1,1 @@
+starter_cm7\startup_stm32h755xx_cm7.o: startup_stm32h755xx_CM7.s
