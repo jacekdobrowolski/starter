@@ -20,7 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "lib/TM1637.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -124,6 +124,7 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+	
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_Delay(100);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -137,8 +138,7 @@ Error_Handler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		HAL_Delay(100);
-		HAL_GPIO_TogglePin( GPIOE, GPIO_PIN_1);
+		displayExample(GPIO_PIN_1, GPIO_PIN_2);
   }
   /* USER CODE END 3 */
 }
@@ -316,7 +316,7 @@ static void MX_GPIO_Init(void)
 	
 	GPIO_InitTypeDef hgpiob;
 	hgpiob.Mode = GPIO_MODE_OUTPUT_PP;
-	hgpiob.Pin =  GPIO_PIN_1;
+	hgpiob.Pin =  GPIO_PIN_1|GPIO_PIN_2;
 	hgpiob.Pull = GPIO_NOPULL;
 	hgpiob.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	

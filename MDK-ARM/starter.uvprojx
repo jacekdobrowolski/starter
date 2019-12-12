@@ -433,9 +433,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
           <GroupName>Application/User/CM4</GroupName>
           <Files>
             <File>
@@ -541,6 +538,11 @@
               <FileName>stm32h7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>TM1637.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Src\lib\TM1637.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -658,6 +660,9 @@
               <FilePath>../Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>
@@ -1088,9 +1093,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
           <GroupName>Application/User/CM4</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -1196,6 +1198,11 @@
               <FileName>stm32h7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>TM1637.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Src\lib\TM1637.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1313,6 +1320,9 @@
               <FilePath>../Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

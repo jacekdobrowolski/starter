@@ -1292,8 +1292,8 @@ ARM Macro Assembler    Page 20
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7.fp.dp --apcs=
 interwork --depend=starter_cm7\startup_stm32h755xx_cm7.d -ostarter_cm7\startup_
-stm32h755xx_cm7.o -I.\RTE\_starter_CM7 -IC:\Users\Jacek\AppData\Local\Arm\Packs
-\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\Jacek\AppData\Local\Arm\Packs\Ke
+stm32h755xx_cm7.o -I.\RTE\_starter_CM7 -IC:\Users\kulik\AppData\Local\Arm\Packs
+\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\kulik\AppData\Local\Arm\Packs\Ke
 il\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include --predefine="_
 _EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SE
 TA 529" --predefine="_RTE_ SETA 1" --predefine="CORE_CM7 SETA 1" --predefine="S
