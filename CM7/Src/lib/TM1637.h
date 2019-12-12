@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include "stm32h7xx_hal.h"
-#ifndef TM1637_h
+#ifndef TM1637_HandleTypeDef_h
 #define TM1637_h
 
 typedef struct 
@@ -8,48 +8,50 @@ typedef struct
 	uint16_t clk;
 	uint16_t dio;
 	GPIO_TypeDef* GPIO;
-}TM1637;
-void init(TM1637 *display, uint16_t clk, uint16_t dio, GPIO_TypeDef* GPIO)
+}TM1637_HandleTypeDef;
+
+// deprecated
+void init(TM1637_HandleTypeDef *display, uint16_t clk, uint16_t dio, GPIO_TypeDef* GPIO)
 {
 	display->clk = clk;
 	display->dio = dio;
 	display->GPIO = GPIO;
 }
-void pins_to_out(TM1637 *display)
+void pins_to_out(TM1637_HandleTypeDef *display)
 {
 	
-	GPIO_InitTypeDef hgpiob;
-	hgpiob.Mode = GPIO_MODE_OUTPUT_PP;
-	hgpiob.Pin =  display->clk|display->dio;
-	hgpiob.Pull = GPIO_NOPULL;
-	hgpiob.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	GPIO_InitTypeDef gpio;
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Pin =  display->clk|display->dio;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	
-	HAL_GPIO_Init(GPIOE, &hgpiob);
+	HAL_GPIO_Init(GPIOE, &gpio);
 
 }
-void pins_to_in(TM1637 *display)
+void pins_to_in(TM1637_HandleTypeDef *display)
 {
 	
-	GPIO_InitTypeDef hgpiob;
-	hgpiob.Mode = GPIO_MODE_INPUT;
-	hgpiob.Pin =  display->clk|display->dio;
-	hgpiob.Pull = GPIO_NOPULL;
-	hgpiob.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	GPIO_InitTypeDef gpio;
+	gpio.Mode = GPIO_MODE_INPUT;
+	gpio.Pin =  display->clk|display->dio;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	
-	HAL_GPIO_Init(display->GPIO, &hgpiob);
+	HAL_GPIO_Init(display->GPIO, &gpio);
 }
 void delay_us(unsigned int i) // nus delay 
 {
-	HAL_Delay(i);	
+	HAL_Delay(i/1000);
 } 
-void start (TM1637 *display) // 1637 start 
+void start (TM1637_HandleTypeDef *display) // 1637 start 
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_SET);
 	delay_us (2);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_RESET);
 } 
-void ask (TM1637 *display) // 1637 Answer 
+void ask (TM1637_HandleTypeDef *display) // 1637 Answer 
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
 	delay_us (5); 
@@ -63,7 +65,7 @@ void ask (TM1637 *display) // 1637 Answer
 	delay_us (2);
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
 } 
-void stop (TM1637 *display) // 1637 Stop
+void stop (TM1637_HandleTypeDef *display) // 1637 Stop
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
 	delay_us (2);
@@ -74,7 +76,7 @@ void stop (TM1637 *display) // 1637 Stop
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_SET);
 
 } 
-void writeByte(unsigned char oneByte, TM1637 *display) // write a byte 
+void writeByte(TM1637_HandleTypeDef *display, unsigned char oneByte) // write a byte 
 {
 	unsigned char i;
 	for (i = 0; i <8; i++)
@@ -129,31 +131,31 @@ unsigned char convertDecToSegment(uint16_t digit)
 		return digits[digit];
 
 }
-void writeDigits(uint16_t digits[], TM1637 *display)
+void writeDigits(TM1637_HandleTypeDef *display, uint16_t digits[])
 {
 	start(display); 
-	writeByte(0x40, display);
+	writeByte(display, 0x40);
 	//40H address is automatically incremented by 1 mode, 44H fixed address mode
 	ask(display); 
 	stop(display); 
 	start(display); 
-	writeByte(0xc0, display); 
+	writeByte(display, 0xc0); 
 	//Set the first address
 	ask(display); 
 	unsigned char i;
 	for(i=0;i<6;i++)  //Addresses from Canada, do not always write address
 	{ 
-	writeByte(convertDecToSegment(digits[i]), display);  //Send data
+	writeByte(display, convertDecToSegment(digits[i]));  //Send data
 	ask(display); 
 	} 
 	
 	stop(display); 
 }
-void setBrightness(unsigned char i, TM1637 * display)
+void setBrightness(TM1637_HandleTypeDef *display, unsigned char i)
 {
 	//0x8f maximum
 	start(display);   
-	writeByte(i, display); //Open display, maximum brightness
+	writeByte(display, i); //Open display, maximum brightness
 	ask(display);   
 	stop(display); 
 }

@@ -47,7 +47,7 @@ UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-TM1637 display;
+TM1637_HandleTypeDef display;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -123,10 +123,15 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-	init(&display, GPIO_PIN_1, GPIO_PIN_2, GPIOE); 
-	uint16_t digits[6] = {1, 2, 3, 4, 5, 6};
-	writeDigits(digits, &display);
-	setBrightness(0x8f, &display);
+	//init(&display, GPIO_PIN_0, GPIO_PIN_2, GPIOE); 
+	display.GPIO = GPIOE;
+	display.clk = GPIO_PIN_0;
+	display.dio = GPIO_PIN_2;
+	
+	uint16_t digits[4] = {0, 1, 2, 3};
+	writeDigits(&display, digits);
+	setBrightness(&display, 0x8f);
+	uint16_t i = 0;
 	/*
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_Delay(100);
@@ -140,9 +145,14 @@ Error_Handler();
   {
 		
     /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
 		
+    /* USER CODE BEGIN 3 */
+		for(int j = 0; j < 4; ++j) {
+			digits[j] = (i + j)%10;
+		}
+		writeDigits(&display, digits);
+		HAL_Delay(500);
+		++i;
   }
   /* USER CODE END 3 */
 }
