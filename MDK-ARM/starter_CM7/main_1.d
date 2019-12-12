@@ -34,3 +34,4 @@ starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+starter_cm7\main_1.o: ../CM7/Src/lib/TM1637.h

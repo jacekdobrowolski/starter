@@ -20,10 +20,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lib/TM1637.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,7 +47,7 @@ UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-
+TM1637_HandleTypeDef display;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,21 +123,36 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+	//init(&display, GPIO_PIN_0, GPIO_PIN_2, GPIOE); 
+	display.GPIO = GPIOE;
+	display.clk = GPIO_PIN_0;
+	display.dio = GPIO_PIN_2;
+	
+	uint16_t digits[4] = {0, 1, 2, 3};
+	writeDigits(&display, digits);
+	setBrightness(&display, 0x8f);
+	uint16_t i = 0;
+	/*
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_Delay(100);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+	*/
   /* USER CODE END 2 */
-
+	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
 		
     /* USER CODE END WHILE */
-
+		
     /* USER CODE BEGIN 3 */
-		HAL_Delay(100);
-		HAL_GPIO_TogglePin( GPIOE, GPIO_PIN_1);
+		for(int j = 0; j < 4; ++j) {
+			digits[j] = (i + j)%10;
+		}
+		writeDigits(&display, digits);
+		HAL_Delay(500);
+		++i;
   }
   /* USER CODE END 3 */
 }
@@ -316,7 +330,7 @@ static void MX_GPIO_Init(void)
 	
 	GPIO_InitTypeDef hgpiob;
 	hgpiob.Mode = GPIO_MODE_OUTPUT_PP;
-	hgpiob.Pin =  GPIO_PIN_1;
+	hgpiob.Pin =  GPIO_PIN_1|GPIO_PIN_2;
 	hgpiob.Pull = GPIO_NOPULL;
 	hgpiob.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	
