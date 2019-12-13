@@ -3,7 +3,7 @@
 <title>Static Call Graph - [starter_CM7\starter_CM7.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image starter_CM7\starter_CM7.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Dec 12 21:08:12 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Fri Dec 13 10:45:25 2019
 <BR><P>
 <H3>Maximum Stack Usage =        424 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -662,8 +662,8 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
 
-<P><STRONG><a name="[bc]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<P><STRONG><a name="[ba]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 
 <P><STRONG><a name="[d3]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
@@ -696,26 +696,24 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
 </UL>
 
-<P><STRONG><a name="[b9]"></a>HAL_GPIO_Init</STRONG> (Thumb, 458 bytes, Stack size 40 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_Init))
+<P><STRONG><a name="[c1]"></a>HAL_GPIO_Init</STRONG> (Thumb, 458 bytes, Stack size 40 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pins_to_out
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pins_to_in
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
+<BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_PinsToOut
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_PinsToIn
 </UL>
 
-<P><STRONG><a name="[c1]"></a>HAL_GPIO_ReadPin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_ReadPin))
-<BR><BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
+<P><STRONG><a name="[be]"></a>HAL_GPIO_ReadPin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_ReadPin))
+<BR><BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
 </UL>
 
-<P><STRONG><a name="[be]"></a>HAL_GPIO_WritePin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_WritePin))
-<BR><BR>[Called By]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeByte
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stop
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;start
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
+<P><STRONG><a name="[bc]"></a>HAL_GPIO_WritePin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32h7xx_hal_gpio.o(i.HAL_GPIO_WritePin))
+<BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteByte
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Stop
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Start
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
 </UL>
 
 <P><STRONG><a name="[ab]"></a>HAL_GetCurrentCPUID</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, stm32h7xx_hal_cortex.o(i.HAL_GetCurrentCPUID))
@@ -736,15 +734,15 @@ Global Symbols
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
 </UL>
 
-<P><STRONG><a name="[c3]"></a>HAL_HSEM_FastTake</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, stm32h7xx_hal_hsem.o(i.HAL_HSEM_FastTake))
+<P><STRONG><a name="[c7]"></a>HAL_HSEM_FastTake</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, stm32h7xx_hal_hsem.o(i.HAL_HSEM_FastTake))
 <BR><BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[c4]"></a>HAL_HSEM_Release</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, stm32h7xx_hal_hsem.o(i.HAL_HSEM_Release))
+<P><STRONG><a name="[c8]"></a>HAL_HSEM_Release</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, stm32h7xx_hal_hsem.o(i.HAL_HSEM_Release))
 <BR><BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ba]"></a>HAL_IncTick</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_hal.o(i.HAL_IncTick))
+<P><STRONG><a name="[b8]"></a>HAL_IncTick</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, stm32h7xx_hal.o(i.HAL_IncTick))
 <BR><BR>[Called By]<UL><LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
 </UL>
 
@@ -796,7 +794,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 
 <P><STRONG><a name="[b1]"></a>HAL_RCCEx_GetD1SysClockFreq</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32h7xx_hal_rcc_ex.o(i.HAL_RCCEx_GetD1SysClockFreq))
@@ -814,7 +812,7 @@ Global Symbols
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 
 <P><STRONG><a name="[b5]"></a>HAL_RCC_ClockConfig</STRONG> (Thumb, 560 bytes, Stack size 40 bytes, stm32h7xx_hal_rcc.o(i.HAL_RCC_ClockConfig))
@@ -824,7 +822,7 @@ Global Symbols
 <LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 
 <P><STRONG><a name="[ac]"></a>HAL_RCC_GetHCLKFreq</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32h7xx_hal_rcc.o(i.HAL_RCC_GetHCLKFreq))
@@ -849,7 +847,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetREVID
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
 
 <P><STRONG><a name="[ad]"></a>HAL_SYSTICK_Config</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, stm32h7xx_hal_cortex.o(i.HAL_SYSTICK_Config))
@@ -884,18 +882,18 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h755xx_cm7.o(RESET)
 </UL>
 <P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32h7xx_it_1.o(i.SysTick_Handler))
-<BR><BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_IncTick
+<BR><BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_IncTick
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h755xx_cm7.o(RESET)
 </UL>
-<P><STRONG><a name="[bb]"></a>SystemClock_Config</STRONG> (Thumb, 158 bytes, Stack size 312 bytes, main_1.o(i.SystemClock_Config))
+<P><STRONG><a name="[b9]"></a>SystemClock_Config</STRONG> (Thumb, 158 bytes, Stack size 312 bytes, main_1.o(i.SystemClock_Config))
 <BR><BR>[Stack]<UL><LI>Max Depth = 400<LI>Call Chain = SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_OscConfig
 <LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_PeriphCLKConfig
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PWREx_ConfigSupply
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
+<LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -905,6 +903,88 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h755xx_cm7.o(.text)
 </UL>
+<P><STRONG><a name="[bb]"></a>TM1637_Ask</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, main_1.o(i.TM1637_Ask))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = TM1637_Ask &rArr; TM1637_PinsToOut &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_PinsToOut
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_PinsToIn
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+</UL>
+
+<P><STRONG><a name="[c6]"></a>TM1637_ConvertDecToSegment</STRONG> (Thumb, 18 bytes, Stack size 24 bytes, main_1.o(i.TM1637_ConvertDecToSegment))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = TM1637_ConvertDecToSegment
+</UL>
+<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+</UL>
+
+<P><STRONG><a name="[c0]"></a>TM1637_Init</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, main_1.o(i.TM1637_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = TM1637_Init &rArr; TM1637_PinsToOut &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_PinsToOut
+</UL>
+<BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[bd]"></a>TM1637_PinsToIn</STRONG> (Thumb, 34 bytes, Stack size 32 bytes, main_1.o(i.TM1637_PinsToIn))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = TM1637_PinsToIn &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
+</UL>
+
+<P><STRONG><a name="[bf]"></a>TM1637_PinsToOut</STRONG> (Thumb, 34 bytes, Stack size 32 bytes, main_1.o(i.TM1637_PinsToOut))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = TM1637_PinsToOut &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Init
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
+</UL>
+
+<P><STRONG><a name="[c2]"></a>TM1637_Start</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, main_1.o(i.TM1637_Start))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = TM1637_Start
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+</UL>
+
+<P><STRONG><a name="[c3]"></a>TM1637_Stop</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, main_1.o(i.TM1637_Stop))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = TM1637_Stop
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+</UL>
+
+<P><STRONG><a name="[c4]"></a>TM1637_WriteByte</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, main_1.o(i.TM1637_WriteByte))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = TM1637_WriteByte
+</UL>
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+</UL>
+
+<P><STRONG><a name="[c5]"></a>TM1637_WriteDigits</STRONG> (Thumb, 106 bytes, Stack size 24 bytes, main_1.o(i.TM1637_WriteDigits))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = TM1637_WriteDigits &rArr; TM1637_Ask &rArr; TM1637_PinsToOut &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteByte
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Stop
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Start
+<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_ConvertDecToSegment
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
+</UL>
+<BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
 <P><STRONG><a name="[5]"></a>UsageFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32h7xx_it_1.o(i.UsageFault_Handler))
 <BR><BR>[Calls]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UsageFault_Handler
 </UL>
@@ -918,115 +998,28 @@ Global Symbols
 
 <P><STRONG><a name="[d7]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[bd]"></a>ask</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, main_1.o(i.ask))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = ask &rArr; pins_to_in &rArr; HAL_GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
-<LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_ReadPin
-<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pins_to_out
-<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pins_to_in
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
-</UL>
-
-<P><STRONG><a name="[ca]"></a>convertDecToSegment</STRONG> (Thumb, 18 bytes, Stack size 24 bytes, main_1.o(i.convertDecToSegment))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = convertDecToSegment
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-</UL>
-
-<P><STRONG><a name="[bf]"></a>delay_us</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, main_1.o(i.delay_us))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = delay_us &rArr; HAL_Delay
-</UL>
-<BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeByte
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stop
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;start
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
-</UL>
-
-<P><STRONG><a name="[9b]"></a>main</STRONG> (Thumb, 176 bytes, Stack size 24 bytes, main_1.o(i.main))
+<P><STRONG><a name="[9b]"></a>main</STRONG> (Thumb, 250 bytes, Stack size 24 bytes, main_1.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 424<LI>Call Chain = main &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HSEM_Release
-<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HSEM_FastTake
+<LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HSEM_Release
+<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_HSEM_FastTake
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
+<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
+<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteDigits
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Init
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
+<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[c0]"></a>pins_to_in</STRONG> (Thumb, 34 bytes, Stack size 32 bytes, main_1.o(i.pins_to_in))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = pins_to_in &rArr; HAL_GPIO_Init
+<P><STRONG><a name="[ca]"></a>setBrightness</STRONG> (Thumb, 34 bytes, Stack size 16 bytes, main_1.o(i.setBrightness))
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = setBrightness &rArr; TM1637_Ask &rArr; TM1637_PinsToOut &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
-</UL>
-<BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
-</UL>
-
-<P><STRONG><a name="[c2]"></a>pins_to_out</STRONG> (Thumb, 34 bytes, Stack size 24 bytes, main_1.o(i.pins_to_out))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = pins_to_out &rArr; HAL_GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
-</UL>
-<BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
-</UL>
-
-<P><STRONG><a name="[c6]"></a>setBrightness</STRONG> (Thumb, 34 bytes, Stack size 16 bytes, main_1.o(i.setBrightness))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = setBrightness &rArr; ask &rArr; pins_to_in &rArr; HAL_GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeByte
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stop
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;start
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
-</UL>
-<BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-</UL>
-
-<P><STRONG><a name="[c7]"></a>start</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, main_1.o(i.start))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = start &rArr; delay_us &rArr; HAL_Delay
-</UL>
-<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
-</UL>
-
-<P><STRONG><a name="[c9]"></a>stop</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, main_1.o(i.stop))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = stop &rArr; delay_us &rArr; HAL_Delay
-</UL>
-<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
-</UL>
-
-<P><STRONG><a name="[c8]"></a>writeByte</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, main_1.o(i.writeByte))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = writeByte &rArr; delay_us &rArr; HAL_Delay
-</UL>
-<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
-</UL>
-<BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeDigits
-<LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setBrightness
-</UL>
-
-<P><STRONG><a name="[c5]"></a>writeDigits</STRONG> (Thumb, 92 bytes, Stack size 16 bytes, main_1.o(i.writeDigits))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = writeDigits &rArr; ask &rArr; pins_to_in &rArr; HAL_GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writeByte
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;stop
-<LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;start
-<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertDecToSegment
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ask
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteByte
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Stop
+<LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Start
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_Ask
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1034,10 +1027,8 @@ Global Symbols
 <H3>
 Local Symbols
 </H3>
-<P><STRONG><a name="[b8]"></a>MX_GPIO_Init</STRONG> (Thumb, 96 bytes, Stack size 32 bytes, main_1.o(i.MX_GPIO_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = MX_GPIO_Init &rArr; HAL_GPIO_Init
-</UL>
-<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
+<P><STRONG><a name="[c9]"></a>MX_GPIO_Init</STRONG> (Thumb, 86 bytes, Stack size 8 bytes, main_1.o(i.MX_GPIO_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = MX_GPIO_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>

@@ -47,7 +47,8 @@ UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-TM1637_HandleTypeDef display;
+TM1637_TypeDef display_clock;
+TM1637_TypeDef display_counter;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -123,15 +124,18 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-	//init(&display, GPIO_PIN_0, GPIO_PIN_2, GPIOE); 
-	display.GPIO = GPIOE;
+	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
+	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF); 
+	/*display.GPIO = GPIOE;
 	display.clk = GPIO_PIN_0;
-	display.dio = GPIO_PIN_2;
+	display.dio = GPIO_PIN_2;*/
 	
-	uint16_t digits[4] = {0, 1, 2, 3};
-	writeDigits(&display, digits);
-	setBrightness(&display, 0x8f);
-	uint16_t i = 0;
+	//uint16_t digits[6] = {0, 1, 2, 3, 10, 10};
+	//TM1637_WriteDigits(&display_clock, digits);
+	setBrightness(&display_clock, 0x8f);
+	//TM1637_WriteDigits(&display_counter, digits);
+	setBrightness(&display_counter, 0x8f);
+	uint16_t i = 60;
 	/*
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_Delay(100);
@@ -147,12 +151,16 @@ Error_Handler();
     /* USER CODE END WHILE */
 		
     /* USER CODE BEGIN 3 */
-		for(int j = 0; j < 4; ++j) {
-			digits[j] = (i + j)%10;
-		}
-		writeDigits(&display, digits);
+		uint16_t digits[4] = {11, 11, i/10, i%10};
+		TM1637_WriteDigits(&display_clock, digits, i%2);
+		uint16_t digits2[4] = {i/10, i%10, i/10, i%10};
+		TM1637_WriteDigits(&display_counter, digits2, 0);
 		HAL_Delay(500);
-		++i;
+		--i;
+		if(i==0)
+		{
+			i=60;
+		}
   }
   /* USER CODE END 3 */
 }
@@ -327,14 +335,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+
 	
-	GPIO_InitTypeDef hgpiob;
-	hgpiob.Mode = GPIO_MODE_OUTPUT_PP;
-	hgpiob.Pin =  GPIO_PIN_1|GPIO_PIN_2;
-	hgpiob.Pull = GPIO_NOPULL;
-	hgpiob.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	
-	HAL_GPIO_Init(GPIOE, &hgpiob);
 }
 
 /* USER CODE BEGIN 4 */
