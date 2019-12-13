@@ -31,5 +31,7 @@ starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_D
 starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h
 starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h
 starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h
+starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc.h
+starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h
 starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 starter_cm7\system_stm32h7xx_dualcore_boot_cm4_cm7.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h

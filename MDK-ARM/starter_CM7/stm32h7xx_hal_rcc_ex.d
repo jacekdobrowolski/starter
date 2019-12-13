@@ -31,5 +31,7 @@ starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7x
 starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_i2c_ex.h
 starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr.h
 starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pwr_ex.h
+starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc.h
+starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h
 starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 starter_cm7\stm32h7xx_hal_rcc_ex.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
