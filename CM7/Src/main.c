@@ -141,9 +141,8 @@ Error_Handler();
 	
 	//uint16_t digits[6] = {0, 1, 2, 3, 10, 10};
 	//TM1637_WriteDigits(&display_clock, digits);
-	setBrightness(&display_clock, 0x8f);
+	
 	//TM1637_WriteDigits(&display_counter, digits);
-	setBrightness(&display_counter, 0x8f);
 	uint16_t i = 60;
 	/*
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
