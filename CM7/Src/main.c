@@ -53,14 +53,15 @@ UART_HandleTypeDef huart3;
 TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
 RTC_TimeTypeDef time;
+RTC_DateTypeDef date;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+void MX_RTC_Init(void);
 void MX_UART4_Init(void);
 void MX_USART3_UART_Init(void);
-void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -128,11 +129,18 @@ Error_Handler();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-	
   /* USER CODE BEGIN 2 */
-	MX_RTC_Init();
+	
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
-	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF); 
+	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
+	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
+	TM1637_WriteTime(&display_counter, 88, 88, TM1637_SEPARATOR_ON);
+
+	MX_RTC_Init();
+	HAL_Delay(1000);
+
+	MX_UART4_Init();
+	MX_USART3_UART_Init();
 	
 	
 	/*display.GPIO = GPIOE;
@@ -143,7 +151,7 @@ Error_Handler();
 	//TM1637_WriteDigits(&display_clock, digits);
 	
 	//TM1637_WriteDigits(&display_counter, digits);
-	uint16_t i = 60;
+	uint16_t i = 99;
 	/*
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 	HAL_Delay(100);
@@ -158,18 +166,18 @@ Error_Handler();
   {
 		
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
 		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
-		uint16_t digits[4] = {time.Hours/10, time.Hours%10, time.Minutes/10, time.Minutes%10};
-		TM1637_WriteDigits(&display_clock, digits, i%2);
-		uint16_t digits2[4] = {11, 11, time.Seconds/10, time.Seconds%10};
-		TM1637_WriteDigits(&display_counter, digits2, 0);
-		HAL_Delay(500);
+		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		TM1637_WriteTime(&display_clock, time.Minutes, time.Seconds, i%2);
+		//uint16_t digits[4] = {time.Hours/10, time.Hours%10, time.Minutes/10, time.Minutes%10};
+		//TM1637_WriteDigits(&display_clock, digits, i%2);
+		TM1637_WriteTime(&display_counter, i, i, i%2);
+		HAL_Delay(100);
 		--i;
 		if(i==0)
 		{
-			i=60;
+			i=99;
 		}
   }
   /* USER CODE END 3 */
@@ -252,7 +260,6 @@ void MX_RTC_Init(void)
 {
 
   /* USER CODE BEGIN RTC_Init 0 */
-
   /* USER CODE END RTC_Init 0 */
 
   RTC_TimeTypeDef sTime = {0};
@@ -270,7 +277,7 @@ void MX_RTC_Init(void)
   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_POS1;
+  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
   {
     Error_Handler();
@@ -282,32 +289,25 @@ void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date 
   */
-  sTime.Hours = 12;
-  sTime.Minutes = 12;
-  sTime.Seconds = 0;
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_ADD1H;
+  sTime.Hours = 0x12;
+  sTime.Minutes = 0x12;
+  sTime.Seconds = 0x30;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
   sDate.WeekDay = RTC_WEEKDAY_MONDAY;
   sDate.Month = RTC_MONTH_JANUARY;
-  sDate.Date = 1;
-  sDate.Year = 0;
+  sDate.Date = 0x1;
+  sDate.Year = 0x0;
 
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Enable Calibrartion 
-  */
-  if (HAL_RTCEx_SetCalibrationOutPut(&hrtc, RTC_CALIBOUTPUT_1HZ) != HAL_OK)
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
-
   /* USER CODE END RTC_Init 2 */
 
 }
@@ -328,7 +328,7 @@ void MX_UART4_Init(void)
 
   /* USER CODE END UART4_Init 1 */
   huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
+  huart4.Init.BaudRate = 9600;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;
@@ -419,7 +419,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
 
