@@ -183,6 +183,7 @@ Error_Handler();
 	}
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
+	__HAL_RCC_UART4_CLK_DISABLE();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -194,7 +195,8 @@ Error_Handler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN); 		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
 		TM1637_WriteTime(&display_counter, time.Seconds, 88, TM1637_SEPARATOR_ON);
 		HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
