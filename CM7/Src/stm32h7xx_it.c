@@ -58,6 +58,8 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern UART_HandleTypeDef huart4;
+extern RTC_HandleTypeDef hrtc;
+extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -218,14 +220,13 @@ void DMA1_Stream0_IRQHandler(void)
 void UART4_IRQHandler(void)
 {
   /* USER CODE BEGIN UART4_IRQn 0 */
-	RTC->WPR = 0xCA;
-	RTC->WPR = 0x53;
+	__HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
 	RTC->SHIFTR = RTC_SHIFTR_ADD1S | ((RTC->PRER & RTC_PRER_PREDIV_S_Msk) - (RTC->SSR & RTC_SSR_SS_Msk));
+	gps_sync = IN_SYNC;
   /* USER CODE END UART4_IRQn 0 */
   HAL_UART_IRQHandler(&huart4);
   /* USER CODE BEGIN UART4_IRQn 1 */
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-	
   /* USER CODE END UART4_IRQn 1 */
 }
 

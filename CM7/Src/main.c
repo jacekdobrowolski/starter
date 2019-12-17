@@ -58,7 +58,7 @@ TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
 RTC_TimeTypeDef time;
 RTC_DateTypeDef date;
-
+volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 
 /* USER CODE END PV */
 
@@ -151,14 +151,12 @@ Error_Handler();
 	MX_UART4_Init();
 	MX_USART3_UART_Init();
 	
-	while (1)
+	do
 	{
 		HAL_UART_Receive(&huart4, rx_data, 64, 1000);
-		if(rx_data[8] != ',')
-		{
-			break;
-		}
 	}
+	while(rx_data[8] != ',');
+	
 	uint8_t time_offset = 7;
 	uint8_t crlf[3] = "\r\n";
 	HAL_UART_Transmit(&huart3, crlf, 3, 10);
@@ -176,8 +174,15 @@ Error_Handler();
 	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	
 	HAL_GPIO_Init(GPIOE, &gpio);
-	
+	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
+	
+	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
+	{
+		__nop();
+	}
+	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
+	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -189,10 +194,9 @@ Error_Handler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN); 		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, time.Seconds, RTC->SSR%100, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, time.Seconds, 88, TM1637_SEPARATOR_ON);
 		HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
 		HAL_Delay(10);
 		
