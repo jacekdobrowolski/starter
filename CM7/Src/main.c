@@ -23,7 +23,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <string.h>
 #include "lib/TM1637.h"
+#include <stdlib.h>
+//#include "DMA_CIRCULAR.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,22 +51,28 @@ RTC_HandleTypeDef hrtc;
 
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_uart4_rx;
 
 /* USER CODE BEGIN PV */
 TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
 RTC_TimeTypeDef time;
 RTC_DateTypeDef date;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 void MX_RTC_Init(void);
 void MX_UART4_Init(void);
 void MX_USART3_UART_Init(void);
-/* USER CODE BEGIN PFP */
 
+uint8_t rx_data[64];
+/* USER CODE BEGIN PFP */
+uint8_t NMEATimeToInt(uint8_t * ptr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -129,34 +138,46 @@ Error_Handler();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   /* USER CODE BEGIN 2 */
-	
+
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
-	TM1637_WriteTime(&display_counter, 88, 88, TM1637_SEPARATOR_ON);
+	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
 
 	MX_RTC_Init();
-	HAL_Delay(1000);
-
+	
 	MX_UART4_Init();
 	MX_USART3_UART_Init();
 	
+	while (1)
+	{
+		HAL_UART_Receive(&huart4, rx_data, 64, 1000);
+		if(rx_data[8] != ',')
+		{
+			break;
+		}
+	}
+	uint8_t time_offset = 7;
+	uint8_t crlf[3] = "\r\n";
+	HAL_UART_Transmit(&huart3, crlf, 3, 10);
+	HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
+	HAL_UART_Transmit(&huart3, crlf, 3, 10);
+	time.Hours = NMEATimeToInt(&rx_data[time_offset]) + 1; // czas UTC na czas zimowy +1
+	time.Minutes = NMEATimeToInt(&rx_data[time_offset+2]);
+	time.Seconds = NMEATimeToInt(&rx_data[time_offset+4]);
+	HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
 	
-	/*display.GPIO = GPIOE;
-	display.clk = GPIO_PIN_0;
-	display.dio = GPIO_PIN_2;*/
+	GPIO_InitTypeDef gpio;
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Pin =  GPIO_PIN_1;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	
-	//uint16_t digits[6] = {0, 1, 2, 3, 10, 10};
-	//TM1637_WriteDigits(&display_clock, digits);
+	HAL_GPIO_Init(GPIOE, &gpio);
 	
-	//TM1637_WriteDigits(&display_counter, digits);
-	uint16_t i = 99;
-	/*
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-	*/
+	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -166,19 +187,15 @@ Error_Handler();
   {
 		
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
 		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
 		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-		TM1637_WriteTime(&display_clock, time.Minutes, time.Seconds, i%2);
-		//uint16_t digits[4] = {time.Hours/10, time.Hours%10, time.Minutes/10, time.Minutes%10};
-		//TM1637_WriteDigits(&display_clock, digits, i%2);
-		TM1637_WriteTime(&display_counter, i, i, i%2);
-		HAL_Delay(100);
-		--i;
-		if(i==0)
-		{
-			i=99;
-		}
+		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, time.Seconds, RTC->SSR%100, TM1637_SEPARATOR_ON);
+		HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
+		HAL_Delay(10);
+		
   }
   /* USER CODE END 3 */
 }
@@ -272,8 +289,8 @@ void MX_RTC_Init(void)
   */
   hrtc.Instance = RTC;
   hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-  hrtc.Init.AsynchPrediv = 127;
-  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.AsynchPrediv = 31;
+  hrtc.Init.SynchPrediv = 1023;
   hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
@@ -289,9 +306,9 @@ void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date 
   */
-  sTime.Hours = 0x12;
-  sTime.Minutes = 0x12;
-  sTime.Seconds = 0x30;
+  sTime.Hours = 0x0;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
@@ -308,6 +325,7 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
+	RTC->CR &= RTC_CR_BYPSHAD;
   /* USER CODE END RTC_Init 2 */
 
 }
@@ -327,6 +345,7 @@ void MX_UART4_Init(void)
   /* USER CODE BEGIN UART4_Init 1 */
 
   /* USER CODE END UART4_Init 1 */
+	
   huart4.Instance = UART4;
   huart4.Init.BaudRate = 9600;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
@@ -408,6 +427,22 @@ void MX_USART3_UART_Init(void)
 
 }
 
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+
+}
+
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -421,11 +456,15 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
 
 }
 
 /* USER CODE BEGIN 4 */
-
+uint8_t NMEATimeToInt(uint8_t * ptr)
+{
+	return (10 * (ptr[0] - '0') + (ptr[1] - '0'));
+}
 /* USER CODE END 4 */
 
 /**
