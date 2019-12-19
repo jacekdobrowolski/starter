@@ -48,6 +48,12 @@
 	char str[PRINT_SIZE]; \
 	sprintf( str, FORMAT, __VA_ARGS__); \
 	HAL_UART_Transmit(&huart3, (unsigned char *)str, strlen(str), 10);
+#define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+#define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+#define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+#define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+#define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
+#define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -64,7 +70,7 @@ TM1637_TypeDef display_counter;
 RTC_TimeTypeDef time;
 RTC_DateTypeDef date;
 volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
-
+uint8_t rx_data[64];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,9 +81,9 @@ void MX_RTC_Init(void);
 void MX_UART4_Init(void);
 void MX_USART3_UART_Init(void);
 
-uint8_t rx_data[64];
-/* USER CODE BEGIN PFP */
 
+/* USER CODE BEGIN PFP */
+void GPIO_LED_Init();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -145,7 +151,8 @@ Error_Handler();
   MX_GPIO_Init();
   MX_DMA_Init();
   /* USER CODE BEGIN 2 */
-
+	GPIO_LED_Init();
+	LED_GREEN_ON();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
@@ -169,14 +176,8 @@ Error_Handler();
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
 	PRINT("SETUP TIME: %d:%d\r\n", time.Hours, time.Minutes);
-	
-	GPIO_InitTypeDef gpio;
-	gpio.Mode = GPIO_MODE_OUTPUT_PP;
-	gpio.Pin =  GPIO_PIN_1;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	
-	HAL_GPIO_Init(GPIOE, &gpio);
+	LED_RED_ON();
+	GPIO_LED_Init();
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 	
@@ -187,7 +188,6 @@ Error_Handler();
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RCC_UART4_CLK_DISABLE();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
-	
 	
   /* USER CODE END 2 */
 
@@ -336,7 +336,7 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
-	//RTC->CR &= RTC_CR_BYPSHAD;
+	
   /* USER CODE END RTC_Init 2 */
 
 }
@@ -472,7 +472,19 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void GPIO_LED_Init()
+{
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	GPIO_InitTypeDef gpio;
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Pin =  GPIO_PIN_1;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	HAL_GPIO_Init(GPIOE, &gpio);
+	gpio.Pin =  GPIO_PIN_14 | GPIO_PIN_0;
+	HAL_GPIO_Init(GPIOB, &gpio);
+}
 /* USER CODE END 4 */
 
 /**
