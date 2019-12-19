@@ -23,9 +23,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <string.h>
 #include "lib/TM1637.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 //#include "DMA_CIRCULAR.h"
 /* USER CODE END Includes */
 
@@ -42,7 +43,11 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define PRINT_SIZE 30
+#define PRINT(FORMAT, ...) \
+	char str[PRINT_SIZE]; \
+	sprintf( str, FORMAT, __VA_ARGS__); \
+	HAL_UART_Transmit(&huart3, (unsigned char *)str, strlen(str), 10);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -72,7 +77,7 @@ void MX_USART3_UART_Init(void);
 
 uint8_t rx_data[64];
 /* USER CODE BEGIN PFP */
-uint8_t NMEATimeToInt(uint8_t * ptr);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -150,22 +155,20 @@ Error_Handler();
 	
 	MX_UART4_Init();
 	MX_USART3_UART_Init();
-	
-	do
+	uint8_t checksum = 0;
+	while(checksum != 6)
 	{
 		HAL_UART_Receive(&huart4, rx_data, 64, 1000);
+		checksum = sscanf((const char*)rx_data, "$GPZDA,%2u%2d%2d.00,%2d,%2d,%4d,00,00*%*X",
+			(unsigned int *)&time.Hours, (unsigned int *)&time.Minutes, (unsigned int *)&time.Seconds,
+				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year);
 	}
-	while(rx_data[8] != ',');
 	
-	uint8_t time_offset = 7;
-	uint8_t crlf[3] = "\r\n";
-	HAL_UART_Transmit(&huart3, crlf, 3, 10);
-	HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
-	HAL_UART_Transmit(&huart3, crlf, 3, 10);
-	time.Hours = NMEATimeToInt(&rx_data[time_offset]) + 1; // czas UTC na czas zimowy +1
-	time.Minutes = NMEATimeToInt(&rx_data[time_offset+2]);
-	time.Seconds = NMEATimeToInt(&rx_data[time_offset+4]);
+	time.Hours += 1; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
+	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	
+	PRINT("SETUP TIME: %d:%d\r\n", time.Hours, time.Minutes);
 	
 	GPIO_InitTypeDef gpio;
 	gpio.Mode = GPIO_MODE_OUTPUT_PP;
@@ -182,8 +185,10 @@ Error_Handler();
 		__nop();
 	}
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
-	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
 	__HAL_RCC_UART4_CLK_DISABLE();
+	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
+	
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -198,8 +203,8 @@ Error_Handler();
 		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
 		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, time.Seconds, 88, TM1637_SEPARATOR_ON);
-		HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
+		TM1637_WriteTime(&display_counter, time.Seconds, 00, TM1637_SEPARATOR_ON);
+		//HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
 		HAL_Delay(10);
 		
   }
@@ -331,7 +336,7 @@ void MX_RTC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN RTC_Init 2 */
-	RTC->CR &= RTC_CR_BYPSHAD;
+	//RTC->CR &= RTC_CR_BYPSHAD;
   /* USER CODE END RTC_Init 2 */
 
 }
@@ -467,10 +472,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint8_t NMEATimeToInt(uint8_t * ptr)
-{
-	return (10 * (ptr[0] - '0') + (ptr[1] - '0'));
-}
+
 /* USER CODE END 4 */
 
 /**
