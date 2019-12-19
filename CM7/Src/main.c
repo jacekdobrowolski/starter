@@ -59,7 +59,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 RTC_HandleTypeDef hrtc;
-
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_uart4_rx;
@@ -83,7 +82,7 @@ void MX_USART3_UART_Init(void);
 
 
 /* USER CODE BEGIN PFP */
-void GPIO_LED_Init();
+void GPIO_LED_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -150,6 +149,9 @@ Error_Handler();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
+	MX_RTC_Init();
+	MX_UART4_Init();
+	MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
 	LED_GREEN_ON();
@@ -158,10 +160,6 @@ Error_Handler();
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
 
-	MX_RTC_Init();
-	
-	MX_UART4_Init();
-	MX_USART3_UART_Init();
 	uint8_t checksum = 0;
 	while(checksum != 6)
 	{
@@ -358,7 +356,7 @@ void MX_UART4_Init(void)
   /* USER CODE END UART4_Init 1 */
 	
   huart4.Instance = UART4;
-  huart4.Init.BaudRate = 9600;
+  huart4.Init.BaudRate = 115200;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;

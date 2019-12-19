@@ -58,10 +58,9 @@
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern UART_HandleTypeDef huart4;
-extern RTC_HandleTypeDef hrtc;
-extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 /* USER CODE BEGIN EV */
-
+extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
+extern RTC_HandleTypeDef hrtc;
 /* USER CODE END EV */
 
 /******************************************************************************/
