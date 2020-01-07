@@ -72,7 +72,7 @@ extern RTC_HandleTypeDef hrtc;
 void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
-
+	
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
@@ -230,6 +230,34 @@ void UART4_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
 /* USER CODE END 1 */
+/*
+void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
+{
+#if defined(DUAL_CORE) && defined(CORE_CM4)
+  if (__HAL_GPIO_EXTID2_GET_IT(GPIO_Pin) != 0x00U)
+  {
+    __HAL_GPIO_EXTID2_CLEAR_IT(GPIO_Pin);
+    HAL_GPIO_EXTI_Callback(GPIO_Pin);
+  }
+#else
+*/
+  /* EXTI line interrupt detected */
+/*
+  if (__HAL_GPIO_EXTI_GET_IT(GPIO_Pin) != 0x00U)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_Pin);
+    HAL_GPIO_EXTI_Callback(GPIO_Pin);
+  }
+#endif
+}
+*/
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(GPIO_Pin);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+	EXTI->PR1 |= EXTI_PR1_PR13;
+  
+}
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
