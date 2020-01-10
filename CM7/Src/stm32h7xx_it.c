@@ -230,6 +230,7 @@ void UART4_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+
 /* USER CODE END 1 */
 /*
 void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)

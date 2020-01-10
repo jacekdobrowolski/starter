@@ -64,6 +64,7 @@ UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_uart4_rx;
 
 /* USER CODE BEGIN PV */
+UART_HandleTypeDef huart6;
 TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
 RTC_TimeTypeDef time = {0};
@@ -77,16 +78,18 @@ uint8_t rx_data[64];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
+//static void MX_DMA_Init(void);
 void MX_RTC_Init(void);
 void MX_UART4_Init(void);
 void MX_USART3_UART_Init(void);
 
 
 /* USER CODE BEGIN PFP */
+void GPIO_IR_Init(void);
 void GPIO_LED_Init(void);
 void GPIO_BUTTON_Init(void);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+void USART6_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -152,14 +155,15 @@ Error_Handler();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
+  //MX_DMA_Init();
 	MX_RTC_Init();
 	
 	MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
+	GPIO_IR_Init();
+	
 	GPIO_BUTTON_Init();
-	LED_GREEN_ON();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
@@ -191,7 +195,6 @@ Error_Handler();
 	// Setting up RTC with GPS data
 	uint8_t checksum = 0;
 	MX_UART4_Init();
-	
 	while(checksum != 6)
 	{
 		HAL_UART_Receive(&huart4, rx_data, 64, 1000);
@@ -200,7 +203,7 @@ Error_Handler();
 				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year);
 	}
 	
-	time.Hours += 1; // UTC -> polski czas zimowy
+	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
@@ -246,8 +249,11 @@ Error_Handler();
 	//Bez tego sie psuje
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
-	LED_GREEN_OFF();
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
+	
+	USART6_Init();
+	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
+	
   /* USER CODE END 2 */
 	
 
@@ -499,27 +505,30 @@ void MX_USART3_UART_Init(void)
 /** 
   * Enable DMA controller clock
   */
+/*
 static void MX_DMA_Init(void) 
 {
-
+*/
   /* DMA controller clock enable */
+/*
   __HAL_RCC_DMA1_CLK_ENABLE();
-
+*/
   /* DMA interrupt init */
   /* DMA1_Stream0_IRQn interrupt configuration */
+/*
   HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
 
 }
-
+*/
 /**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
   */
+
 static void MX_GPIO_Init(void)
 {
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
@@ -553,7 +562,6 @@ void GPIO_BUTTON_Init()
 	gpio.Pull = GPIO_NOPULL;
 	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
 	HAL_GPIO_Init(GPIOC, &gpio);
-	LED_GREEN_OFF();
 	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0,1);
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	RCC -> APB4ENR |= RCC_APB4ENR_SYSCFGEN;
@@ -563,19 +571,29 @@ void GPIO_BUTTON_Init()
 	EXTI->RTSR1 |= EXTI_RTSR1_TR13;
 }
 
+void GPIO_IR_Init()
+{
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef gpio;
+	gpio.Mode = GPIO_MODE_INPUT;
+	gpio.Pin =  GPIO_PIN_3;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+	HAL_GPIO_Init(GPIOA, &gpio);
+	HAL_NVIC_SetPriority(EXTI3_IRQn, 1,0);
+	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+	RCC -> APB4ENR |= RCC_APB4ENR_SYSCFGEN;
+	SYSCFG->EXTICR[1] &= ~SYSCFG_EXTICR1_EXTI3;
+	SYSCFG->EXTICR[1] |= SYSCFG_EXTICR1_EXTI3_PA;
+	EXTI->IMR1 |= EXTI_IMR1_IM3;
+	EXTI->RTSR1 |= EXTI_RTSR1_TR3;
+}
+
 void RTC_Alarm_IRQHandler()
 {
 	LED_YELLOW_OFF();
 	LED_RED_OFF();
 }
-/*
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	LED_RED_OFF();
-	UNUSED(GPIO_Pin);
-}
-*/
-
 void EXTI15_10_IRQHandler()
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
@@ -595,7 +613,10 @@ void EXTI15_10_IRQHandler()
 	}
 }
 
-
+void EXTI3_IRQHandler()
+{
+	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
+}
 void RTC_WKUP_IRQHandler()
 {	
 // reseting wakeup flag must be done in software
@@ -608,6 +629,55 @@ void RTC_WKUP_IRQHandler()
 	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
 	TM1637_WriteTime(&display_counter, time.Seconds, 00, TM1637_SEPARATOR_OFF);
+}
+void USART6_Init(void)
+{
+	__HAL_RCC_USART6_CLK_ENABLE();
+	huart6.Instance = USART6;
+  huart6.Init.BaudRate = 115200;
+  huart6.Init.WordLength = UART_WORDLENGTH_8B;
+  huart6.Init.StopBits = UART_STOPBITS_1;
+  huart6.Init.Parity = UART_PARITY_NONE;
+  huart6.Init.Mode = UART_MODE_TX_RX;
+  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart6.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart6.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+	
+  if (HAL_UARTEx_SetTxFifoThreshold(&huart6, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&huart6, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&huart6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+	GPIO_InitTypeDef usart6gpio;
+	usart6gpio.Pin = GPIO_PIN_14 | GPIO_PIN_9;
+  usart6gpio.Mode = GPIO_MODE_AF_PP;
+  usart6gpio.Pull = GPIO_NOPULL;
+  usart6gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  usart6gpio.Alternate = GPIO_AF7_USART6;
+  HAL_GPIO_Init(GPIOG, &usart6gpio);
+	
+	HAL_NVIC_SetPriority(USART6_IRQn, 0,3);
+	HAL_NVIC_EnableIRQ(USART6_IRQn);
+}
+
+void USART6_IRQHandler(void)
+{
+	LED_GREEN_ON();
+	HAL_UART_IRQHandler(&huart6);
 }
 /* USER CODE END 4 */
 
