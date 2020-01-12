@@ -20,9 +20,8 @@ Celem projektu jest stworzenie startera do rajdów. Urządzenie ma umożliwiać 
 - Detekcja falstartu przy użyciu fotokomórki 
     - jeśli przecięcie miedzy 5, a 1 to  to zielona dioda miga.
     - jeśli przecięcie miedzy 10, a 5 to nie odlicza dalej (bo to znaczy, ze np. startujący zawodników wszedł przez przypadek między fotokomórki albo fotokomórki są źle ustawione się nie widza) czerwona dioda się zapala.
-- Łączność po WiFi ze smartfonem, którym można ustawić tryb pracy.
-- Wysyłanie czasu przecięcia fotokomórki do smartfona 
-- Zapiswanie czsów przecięcia na karcie SD
+- Łączność po WiFi można ustawić tryb pracy oraz wysyłanie czasu przecięcia.
+- Zapiswanie czasów przecięcia na karcie SD.
 
 ## 4. List modułów i komponentów potrzebnych do realizacji projektu
 
@@ -49,7 +48,6 @@ Mikrokontroler będzie działał poprzez wybudzanie z użyciem przerwań generow
 | Zaimplementowanie odliczania i wyświetlenie tego na wyświetlaczu. | FK | 20 grudnia |
 | Zaimplementowanie wyzwalania zewnętrznego startu | FK | 23 grudnia |
 | Zaimplementowanie synchronizacji godziny z GPS | JD | 10 stycznia |
-| Napisanie aplikacji na smartfona do konfiguracji i komunikacji z urządzeniem | FK | 15 stycznia |
 | Zaimplementowanie łączności po WiFi | JD | 20 stycznia |
 | Zaimplementowanie zapisywania na kartę SD | FK | 25 stycznia |
 
