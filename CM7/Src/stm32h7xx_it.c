@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32h7xx_it.h"
+#include "TM1637.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -61,6 +62,15 @@ extern UART_HandleTypeDef huart4;
 /* USER CODE BEGIN EV */
 extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 extern RTC_HandleTypeDef hrtc;
+
+extern UART_HandleTypeDef huart6;
+extern TM1637_TypeDef display_clock;
+extern TM1637_TypeDef display_counter;
+extern volatile RTC_TimeTypeDef time;
+extern RTC_DateTypeDef date;
+extern volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 1, SETUP, INIT}starter_mode;
+extern volatile enum SetupMode{SETUP_60 = 60, SETUP_30 = 30, SETUP_EXTERNAL = 1}setup_mode;
+extern uint8_t rx_data[64];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -231,6 +241,51 @@ void UART4_IRQHandler(void)
 
 /* USER CODE BEGIN 1 */
 
+void USART6_IRQHandler(void)
+{
+	//LED_GREEN_ON();
+	HAL_UART_IRQHandler(&huart6);
+}
+
+void RTC_WKUP_IRQHandler()
+{	
+// reseting wakeup flag must be done in software
+	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
+	
+	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
+	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
+	
+	HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
+	TM1637_WriteTime(&display_counter, time.Seconds, starter_mode, TM1637_SEPARATOR_OFF);
+}
+
+void EXTI3_IRQHandler()
+{
+	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
+}
+
+void EXTI15_10_IRQHandler()
+{
+	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
+	if(starter_mode == SETUP)
+	{
+		time.Seconds = 0;
+		HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
+		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		
+		if(setup_mode == SETUP_30) {
+			setup_mode = SETUP_60;
+		}else if(setup_mode == SETUP_60) {
+			setup_mode = SETUP_EXTERNAL;
+		} else if(setup_mode == SETUP_EXTERNAL) {
+			setup_mode = SETUP_30;
+		}
+		TM1637_WriteTime(&display_counter, time.Seconds, setup_mode, TM1637_SEPARATOR_ON);
+	}
+}
+
 /* USER CODE END 1 */
 /*
 void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
@@ -253,12 +308,16 @@ void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
 #endif
 }
 */
+/*
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+*/
   /* Prevent unused argument(s) compilation warning */
+/*
   UNUSED(GPIO_Pin);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 	EXTI->PR1 |= EXTI_PR1_PR13;
   
 }
+*/
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

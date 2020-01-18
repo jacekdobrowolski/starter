@@ -536,6 +536,16 @@
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_msp.c</FilePath>
             </File>
+            <File>
+              <FileName>TM1637.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\TM1637.h</FilePath>
+            </File>
+            <File>
+              <FileName>TM1637.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\TM1637.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1302,6 +1312,16 @@
               <FileName>stm32h7xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../CM7/Src/stm32h7xx_hal_msp.c</FilePath>
+            </File>
+            <File>
+              <FileName>TM1637.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\TM1637.h</FilePath>
+            </File>
+            <File>
+              <FileName>TM1637.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\TM1637.c</FilePath>
             </File>
           </Files>
         </Group>

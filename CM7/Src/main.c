@@ -23,11 +23,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lib/TM1637.h"
+#include "TM1637.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-//#include "DMA_CIRCULAR.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,13 +67,15 @@ DMA_HandleTypeDef hdma_uart4_rx;
 UART_HandleTypeDef huart6;
 TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
-RTC_TimeTypeDef time = {0};
+volatile RTC_TimeTypeDef time = {0};
 RTC_DateTypeDef date = {0};
 volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 1, SETUP, INIT}starter_mode;
 volatile enum SetupMode{SETUP_60 = 60, SETUP_30 = 30, SETUP_EXTERNAL = 1}setup_mode;
 uint8_t rx_data[64];
 /* USER CODE END PV */
+
+#include "init_functions.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -157,17 +159,17 @@ Error_Handler();
   MX_GPIO_Init();
   //MX_DMA_Init();
 	MX_RTC_Init();
-	
 	MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
 	GPIO_IR_Init();
-	
+	//USART6_Init();
 	GPIO_BUTTON_Init();
+
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
-	TM1637_WriteTime(&display_counter, 88, 88, TM1637_SEPARATOR_ON);
+	TM1637_WriteTime(&display_counter, 00, 00, TM1637_SEPARATOR_ON);
 /*
 	RTC_AlarmTypeDef alarm={0};
 	alarm.Alarm = RTC_ALARM_A;
@@ -176,20 +178,31 @@ Error_Handler();
 	HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 0, 2);
 	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
 	*/
+	
+	// unmasking line 19 in exti which is RTC wakeup
+	EXTI->IMR1 |= EXTI_IMR1_IM19;
+	//EXTI->EMR1 |= EXTI_IMR1_IM19;
+	// setting rising edge trigger and falling
+	EXTI->RTSR1 |= EXTI_RTSR1_TR19;
+	//__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
+		
+	HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 0,2);
+	
 	// Starter mode selection
 	starter_mode = SETUP;
 	setup_mode = SETUP_30;
 	while(time.Seconds != 3)
 	{
-		HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-		TM1637_WriteTime(&display_counter, time.Seconds, setup_mode, TM1637_SEPARATOR_ON);
-		HAL_Delay(100);
+		//HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+		//HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		
+		//HAL_Delay(100);
 	}
+	
 	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
 	//starter_mode = (int) setup_mode;
 	time.Seconds = 0;
-	HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
+	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 
 	// Setting up RTC with GPS data
@@ -204,7 +217,7 @@ Error_Handler();
 	}
 	
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
-	HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
+	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
 	PRINT("SETUP TIME: %d:%d\r\n", time.Hours, time.Minutes);
@@ -237,21 +250,14 @@ Error_Handler();
 	RTC->CR |= RTC_CR_WUTE;
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc); 
 		
-	// unmasking line 19 in exti whiuch is RTC wakeup
-	EXTI->IMR1 |= EXTI_IMR1_IM19;
-	//EXTI->EMR1 |= EXTI_IMR1_IM19;
-	// setting rising edge trigger and falling
-	EXTI->RTSR1 |= EXTI_RTSR1_TR19;
-	//__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
-		
-	HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 0,2);
+	
 	
 	//Bez tego sie psuje
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
 	
-	USART6_Init();
+	
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
 	
   /* USER CODE END 2 */
@@ -343,164 +349,14 @@ void SystemClock_Config(void)
   }
 }
 
-/**
-  * @brief RTC Initialization Function
-  * @param None
-  * @retval None
-  */
-void MX_RTC_Init(void)
-{
 
-  /* USER CODE BEGIN RTC_Init 0 */
-  /* USER CODE END RTC_Init 0 */
 
-  RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef sDate = {0};
 
-  /* USER CODE BEGIN RTC_Init 1 */
 
-  /* USER CODE END RTC_Init 1 */
-  /** Initialize RTC Only 
-  */
-  hrtc.Instance = RTC;
-  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-  hrtc.Init.AsynchPrediv = 31;
-  hrtc.Init.SynchPrediv = 1023;
-  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
-  if (HAL_RTC_Init(&hrtc) != HAL_OK)
-  {
-    Error_Handler();
-  }
 
-  /* USER CODE BEGIN Check_RTC_BKUP */
-    
-  /* USER CODE END Check_RTC_BKUP */
 
-  /** Initialize RTC and set the Time and Date 
-  */
-  sTime.Hours = 0x0;
-  sTime.Minutes = 0x0;
-  sTime.Seconds = 0x0;
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
-  sDate.Month = RTC_MONTH_JANUARY;
-  sDate.Date = 0x1;
-  sDate.Year = 0x0;
 
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN RTC_Init 2 */
-	
-  /* USER CODE END RTC_Init 2 */
 
-}
-
-/**
-  * @brief UART4 Initialization Function
-  * @param None
-  * @retval None
-  */
-void MX_UART4_Init(void)
-{
-
-  /* USER CODE BEGIN UART4_Init 0 */
-
-  /* USER CODE END UART4_Init 0 */
-
-  /* USER CODE BEGIN UART4_Init 1 */
-
-  /* USER CODE END UART4_Init 1 */
-	
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart4.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart4.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart4.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart4, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart4, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart4) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN UART4_Init 2 */
-
-  /* USER CODE END UART4_Init 2 */
-
-}
-
-/**
-  * @brief USART3 Initialization Function
-  * @param None
-  * @retval None
-  */
-void MX_USART3_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART3_Init 0 */
-
-  /* USER CODE END USART3_Init 0 */
-
-  /* USER CODE BEGIN USART3_Init 1 */
-
-  /* USER CODE END USART3_Init 1 */
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart3.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart3, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart3, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART3_Init 2 */
-
-  /* USER CODE END USART3_Init 2 */
-
-}
 
 /** 
   * Enable DMA controller clock
@@ -521,164 +377,21 @@ static void MX_DMA_Init(void)
 
 }
 */
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
 
-static void MX_GPIO_Init(void)
-{
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-	__HAL_RCC_GPIOE_CLK_ENABLE();
 
-}
+
 
 /* USER CODE BEGIN 4 */
-void GPIO_LED_Init()
-{
-	__HAL_RCC_GPIOE_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	GPIO_InitTypeDef gpio;
-	gpio.Mode = GPIO_MODE_OUTPUT_PP;
-	gpio.Pin =  GPIO_PIN_1;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	HAL_GPIO_Init(GPIOE, &gpio);
-	gpio.Pin =  GPIO_PIN_14 | GPIO_PIN_0;
-	HAL_GPIO_Init(GPIOB, &gpio);
-}
 
-void GPIO_BUTTON_Init()
-{
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	GPIO_InitTypeDef gpio;
-	gpio.Mode = GPIO_MODE_INPUT;
-	gpio.Pin =  GPIO_PIN_13;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	HAL_GPIO_Init(GPIOC, &gpio);
-	HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0,1);
-	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-	RCC -> APB4ENR |= RCC_APB4ENR_SYSCFGEN;
-	SYSCFG->EXTICR[3] &= ~SYSCFG_EXTICR4_EXTI13;
-	SYSCFG->EXTICR[3] |= SYSCFG_EXTICR4_EXTI13_PC;
-	EXTI->IMR1 |= EXTI_IMR1_IM13;
-	EXTI->RTSR1 |= EXTI_RTSR1_TR13;
-}
 
-void GPIO_IR_Init()
-{
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	GPIO_InitTypeDef gpio;
-	gpio.Mode = GPIO_MODE_INPUT;
-	gpio.Pin =  GPIO_PIN_3;
-	gpio.Pull = GPIO_NOPULL;
-	gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-	HAL_GPIO_Init(GPIOA, &gpio);
-	HAL_NVIC_SetPriority(EXTI3_IRQn, 1,0);
-	HAL_NVIC_EnableIRQ(EXTI3_IRQn);
-	RCC -> APB4ENR |= RCC_APB4ENR_SYSCFGEN;
-	SYSCFG->EXTICR[1] &= ~SYSCFG_EXTICR1_EXTI3;
-	SYSCFG->EXTICR[1] |= SYSCFG_EXTICR1_EXTI3_PA;
-	EXTI->IMR1 |= EXTI_IMR1_IM3;
-	EXTI->RTSR1 |= EXTI_RTSR1_TR3;
-}
 
-void RTC_Alarm_IRQHandler()
-{
-	LED_YELLOW_OFF();
-	LED_RED_OFF();
-}
-void EXTI15_10_IRQHandler()
-{
-	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
-	if(starter_mode == SETUP)
-	{
-		time.Seconds = 0;
-		HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
-		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
-		
-		if(setup_mode == SETUP_30) {
-			setup_mode = SETUP_60;
-		}else if(setup_mode == SETUP_60) {
-			setup_mode = SETUP_EXTERNAL;
-		} else if(setup_mode == SETUP_EXTERNAL) {
-			setup_mode = SETUP_30;
-		}
-	}
-}
 
-void EXTI3_IRQHandler()
-{
-	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
-}
-void RTC_WKUP_IRQHandler()
-{	
-// reseting wakeup flag must be done in software
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
-	
-	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
-	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
-	
-	HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
-	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
-	TM1637_WriteTime(&display_counter, time.Seconds, 00, TM1637_SEPARATOR_OFF);
-}
-void USART6_Init(void)
-{
-	__HAL_RCC_USART6_CLK_ENABLE();
-	huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
-  huart6.Init.WordLength = UART_WORDLENGTH_8B;
-  huart6.Init.StopBits = UART_STOPBITS_1;
-  huart6.Init.Parity = UART_PARITY_NONE;
-  huart6.Init.Mode = UART_MODE_TX_RX;
-  huart6.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart6.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart6.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart6.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  huart6.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart6) != HAL_OK)
-  {
-    Error_Handler();
-  }
-	
-  if (HAL_UARTEx_SetTxFifoThreshold(&huart6, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_SetRxFifoThreshold(&huart6, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_UARTEx_DisableFifoMode(&huart6) != HAL_OK)
-  {
-    Error_Handler();
-  }
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	GPIO_InitTypeDef usart6gpio;
-	usart6gpio.Pin = GPIO_PIN_14 | GPIO_PIN_9;
-  usart6gpio.Mode = GPIO_MODE_AF_PP;
-  usart6gpio.Pull = GPIO_NOPULL;
-  usart6gpio.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  usart6gpio.Alternate = GPIO_AF7_USART6;
-  HAL_GPIO_Init(GPIOG, &usart6gpio);
-	
-	HAL_NVIC_SetPriority(USART6_IRQn, 0,3);
-	HAL_NVIC_EnableIRQ(USART6_IRQn);
-}
 
-void USART6_IRQHandler(void)
-{
-	LED_GREEN_ON();
-	HAL_UART_IRQHandler(&huart6);
-}
+
+
+
+
+
 /* USER CODE END 4 */
 
 /**

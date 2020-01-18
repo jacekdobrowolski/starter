@@ -36,7 +36,8 @@ starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 starter_cm7\main_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
-starter_cm7\main_1.o: ../CM7/Src/lib/TM1637.h
+starter_cm7\main_1.o: ../CM7/Inc/TM1637.h
 starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+starter_cm7\main_1.o: ../CM7/Inc/init_functions.h
