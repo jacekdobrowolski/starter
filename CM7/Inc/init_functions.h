@@ -297,6 +297,29 @@ void MX_RTC_Init(void)
   }
   /* USER CODE BEGIN RTC_Init 2 */
 	
+	__HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
+	// disabling wakeup timer
+	RTC->CR &= ~RTC_CR_WUTE;
+	while(!(RTC->ISR & RTC_ISR_WUTWF_Msk)) {}
+	// selecting 1s to 18h 
+	RTC->CR |= RTC_CR_WUCKSEL_2;
+	RTC->CR &= ~RTC_CR_WUCKSEL_1;
+	// seting to wakeup every 1s
+	RTC->WUTR &= 0x0000UL;
+	// enabling wakeup timer interrupt
+	RTC->CR	|= RTC_CR_WUTIE;
+	RTC->CR |= RTC_CR_WUTE;
+	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc); 
+	
+	// unmasking line 19 in exti which is RTC wakeup
+	EXTI->IMR1 |= EXTI_IMR1_IM19;
+	//EXTI->EMR1 |= EXTI_IMR1_IM19;
+	// setting rising edge trigger and falling
+	EXTI->RTSR1 |= EXTI_RTSR1_TR19;
+	//__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
+		
+	HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 0,2);
+	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
   /* USER CODE END RTC_Init 2 */
 
 }

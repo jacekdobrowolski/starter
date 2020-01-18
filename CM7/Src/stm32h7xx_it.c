@@ -38,7 +38,12 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+#define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+#define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+#define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+#define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
+#define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -243,7 +248,7 @@ void UART4_IRQHandler(void)
 
 void USART6_IRQHandler(void)
 {
-	//LED_GREEN_ON();
+	LED_GREEN_ON();
 	HAL_UART_IRQHandler(&huart6);
 }
 
@@ -255,10 +260,10 @@ void RTC_WKUP_IRQHandler()
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
 	
-	HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
+	HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
-	TM1637_WriteTime(&display_counter, time.Seconds, starter_mode, TM1637_SEPARATOR_OFF);
+	TM1637_WriteTime(&display_counter, time.Seconds, setup_mode, TM1637_SEPARATOR_OFF);
 }
 
 void EXTI3_IRQHandler()
@@ -272,7 +277,7 @@ void EXTI15_10_IRQHandler()
 	if(starter_mode == SETUP)
 	{
 		time.Seconds = 0;
-		HAL_RTC_SetTime(&hrtc,  &time, RTC_FORMAT_BIN);
+		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 		
 		if(setup_mode == SETUP_30) {
@@ -286,38 +291,4 @@ void EXTI15_10_IRQHandler()
 	}
 }
 
-/* USER CODE END 1 */
-/*
-void HAL_GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
-{
-#if defined(DUAL_CORE) && defined(CORE_CM4)
-  if (__HAL_GPIO_EXTID2_GET_IT(GPIO_Pin) != 0x00U)
-  {
-    __HAL_GPIO_EXTID2_CLEAR_IT(GPIO_Pin);
-    HAL_GPIO_EXTI_Callback(GPIO_Pin);
-  }
-#else
-*/
-  /* EXTI line interrupt detected */
-/*
-  if (__HAL_GPIO_EXTI_GET_IT(GPIO_Pin) != 0x00U)
-  {
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_Pin);
-    HAL_GPIO_EXTI_Callback(GPIO_Pin);
-  }
-#endif
-}
-*/
-/*
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-*/
-  /* Prevent unused argument(s) compilation warning */
-/*
-  UNUSED(GPIO_Pin);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-	EXTI->PR1 |= EXTI_PR1_PR13;
-  
-}
-*/
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

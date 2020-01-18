@@ -51,11 +51,11 @@
 #define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
 #define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 #define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+#define LED_GREEN_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 #define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 #define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 #define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 /* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 
 RTC_HandleTypeDef hrtc;
@@ -157,8 +157,7 @@ Error_Handler();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_DMA_Init();
-	MX_RTC_Init();
+	
 	MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
@@ -170,34 +169,16 @@ Error_Handler();
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 00, 00, TM1637_SEPARATOR_ON);
-/*
-	RTC_AlarmTypeDef alarm={0};
-	alarm.Alarm = RTC_ALARM_A;
-	alarm.AlarmMask = RTC_ALARMMASK_ALL;
-	HAL_RTC_SetAlarm_IT(&hrtc, &alarm, RTC_FORMAT_BIN);
-	HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 0, 2);
-	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
-	*/
-	
-	// unmasking line 19 in exti which is RTC wakeup
-	EXTI->IMR1 |= EXTI_IMR1_IM19;
-	//EXTI->EMR1 |= EXTI_IMR1_IM19;
-	// setting rising edge trigger and falling
-	EXTI->RTSR1 |= EXTI_RTSR1_TR19;
-	//__HAL_RTC_WAKEUPTIMER_EXTI_ENABLE_IT();
-		
-	HAL_NVIC_SetPriority(RTC_WKUP_IRQn, 0,2);
-	
+	MX_RTC_Init();
+	LED_GREEN_ON();
 	// Starter mode selection
 	starter_mode = SETUP;
 	setup_mode = SETUP_30;
 	while(time.Seconds != 3)
 	{
-		//HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
-		//HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-		
-		//HAL_Delay(100);
+		__nop();
 	}
+	LED_GREEN_OFF();
 	
 	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
 	//starter_mode = (int) setup_mode;
@@ -214,6 +195,7 @@ Error_Handler();
 		checksum = sscanf((const char*)rx_data, "$GPZDA,%2u%2d%2d.00,%2d,%2d,%4d,00,00*%*X",
 			(unsigned int *)&time.Hours, (unsigned int *)&time.Minutes, (unsigned int *)&time.Seconds,
 				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year);
+		LED_GREEN_TOGGLE();
 	}
 	
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
@@ -233,50 +215,21 @@ Error_Handler();
 	__HAL_RCC_UART4_CLK_DISABLE();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
 	
-	
-	
-	
-	__HAL_RTC_WRITEPROTECTION_DISABLE(&hrtc);
-	// disabling wakeup timer
-	RTC->CR &= ~RTC_CR_WUTE;
-	while(!(RTC->ISR & RTC_ISR_WUTWF_Msk)) {}
-	// selecting 1s to 18h 
-	RTC->CR |= RTC_CR_WUCKSEL_2;
-	RTC->CR &= ~RTC_CR_WUCKSEL_1;
-	// seting to wakeup every 1s
-	RTC->WUTR &= 0x0000UL;
-	// enabling wakeup timer interrupt
-	RTC->CR	|= RTC_CR_WUTIE;
-	RTC->CR |= RTC_CR_WUTE;
-	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc); 
-		
-	
-	
 	//Bez tego sie psuje
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
 	
-	
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
 	
   /* USER CODE END 2 */
-	
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
   while (1)
   {
-		
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */		
-		
-		//HAL_UART_Transmit(&huart3, &rx_data[time_offset], 6, 10);
-		//HAL_Delay(20);
-		
-		
+		__nop();	
   }
   /* USER CODE END 3 */
 }
