@@ -70,8 +70,10 @@ TM1637_TypeDef display_counter;
 volatile RTC_TimeTypeDef time = {0};
 RTC_DateTypeDef date = {0};
 volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
-volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 1, SETUP, INIT}starter_mode;
-volatile enum SetupMode{SETUP_60 = 60, SETUP_30 = 30, SETUP_EXTERNAL = 1}setup_mode;
+volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 3, SETUP, INIT}starter_mode;
+volatile uint8_t counter_reload;
+volatile enum StartState{GATE_OPEN, GATE_CLOSED, NO_START}start_state;
+volatile uint8_t counter;
 uint8_t rx_data[64];
 /* USER CODE END PV */
 
@@ -162,24 +164,43 @@ Error_Handler();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
 	GPIO_IR_Init();
-	//USART6_Init();
+	USART6_Init();
 	GPIO_BUTTON_Init();
-
+	
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 00, 00, TM1637_SEPARATOR_ON);
 	MX_RTC_Init();
-	LED_GREEN_ON();
+	//LED_GREEN_ON();
 	// Starter mode selection
 	starter_mode = SETUP;
-	setup_mode = SETUP_30;
+	counter = 30;
 	while(time.Seconds != 3)
 	{
 		__nop();
 	}
-	LED_GREEN_OFF();
+	switch(counter)
+	{
+		case(30):
+			starter_mode = AUTO_START_30;
+			counter_reload = 30;
+			break;
+		case(60):
+			starter_mode = AUTO_START_60;
+			counter_reload = 60;
+			break;
+		case(3):
+			starter_mode = EXTERNAL;
+			counter_reload = 3+1;
+			break;
+		default:
+			Error_Handler();
+	}
+	//LED_GREEN_OFF();
 	
+	// open 8888 tcp socket
+	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
 	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
 	//starter_mode = (int) setup_mode;
 	time.Seconds = 0;
@@ -195,7 +216,7 @@ Error_Handler();
 		checksum = sscanf((const char*)rx_data, "$GPZDA,%2u%2d%2d.00,%2d,%2d,%4d,00,00*%*X",
 			(unsigned int *)&time.Hours, (unsigned int *)&time.Minutes, (unsigned int *)&time.Seconds,
 				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year);
-		LED_GREEN_TOGGLE();
+		//LED_GREEN_TOGGLE();
 	}
 	
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
@@ -220,7 +241,7 @@ Error_Handler();
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
 	
-	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
+	
 	
   /* USER CODE END 2 */
 
@@ -293,7 +314,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USART3
-                              |RCC_PERIPHCLK_UART4;
+                              |RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_USART6;
   PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)

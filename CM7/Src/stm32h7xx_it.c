@@ -33,14 +33,16 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+ #define GATE_DELAY 3
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+#define LED_RED_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 #define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 #define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+#define LED_GREEN_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 #define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
 #define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 #define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -73,8 +75,10 @@ extern TM1637_TypeDef display_clock;
 extern TM1637_TypeDef display_counter;
 extern volatile RTC_TimeTypeDef time;
 extern RTC_DateTypeDef date;
-extern volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 1, SETUP, INIT}starter_mode;
-extern volatile enum SetupMode{SETUP_60 = 60, SETUP_30 = 30, SETUP_EXTERNAL = 1}setup_mode;
+extern volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 3, SETUP, INIT}starter_mode;
+extern volatile enum StartState{GATE_OPEN, GATE_CLOSED, NO_START}start_state;
+extern volatile uint8_t counter;
+extern volatile uint8_t counter_reload;
 extern uint8_t rx_data[64];
 /* USER CODE END EV */
 
@@ -248,27 +252,66 @@ void UART4_IRQHandler(void)
 
 void USART6_IRQHandler(void)
 {
-	LED_GREEN_ON();
+	LED_GREEN_TOGGLE();
+	
 	HAL_UART_IRQHandler(&huart6);
 }
 
 void RTC_WKUP_IRQHandler()
 {	
 // reseting wakeup flag must be done in software
-	HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
+	//HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
 	
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
-	
+	if(starter_mode != SETUP && counter > 0)
+	{
+		counter--;
+	}
+	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
+	if(counter == 3)
+	{
+		start_state = GATE_CLOSED;
+	}
+	else if(counter == 0)
+	{
+		start_state = GATE_OPEN;
+		//LED_GREEN_ON();
+		if(starter_mode != EXTERNAL)
+		{
+			counter = counter_reload;
+		}
+	}
+	if(counter == counter_reload - GATE_DELAY)
+	{
+		start_state = NO_START;
+		LED_RED_OFF();
+	}
 	HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
-	TM1637_WriteTime(&display_counter, time.Seconds, setup_mode, TM1637_SEPARATOR_OFF);
+	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
 }
 
 void EXTI3_IRQHandler()
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
+	if(start_state == GATE_OPEN)
+	{
+		//LED_GREEN_OFF();
+		
+		// send time
+		
+	}	else if(start_state == GATE_CLOSED)	{
+		
+		if(starter_mode != EXTERNAL)
+		{
+			// falstart
+		LED_RED_ON();
+		}
+	} else {
+	
+	}
 }
 
 void EXTI15_10_IRQHandler()
@@ -280,14 +323,17 @@ void EXTI15_10_IRQHandler()
 		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 		
-		if(setup_mode == SETUP_30) {
-			setup_mode = SETUP_60;
-		}else if(setup_mode == SETUP_60) {
-			setup_mode = SETUP_EXTERNAL;
-		} else if(setup_mode == SETUP_EXTERNAL) {
-			setup_mode = SETUP_30;
+		if(counter == 30) {
+			counter = 60;
+		}else if(counter == 60) {
+			counter = 3;
+		} else if(counter == 3) {
+			counter = 30;
 		}
-		TM1637_WriteTime(&display_counter, time.Seconds, setup_mode, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
+	} else if(starter_mode == EXTERNAL) {
+		start_state = GATE_CLOSED;
+		counter = counter_reload;
 	}
 }
 

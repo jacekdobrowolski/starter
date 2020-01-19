@@ -16,6 +16,7 @@ extern UART_HandleTypeDef huart6;
 void USART6_Init(void)
 {
 	__HAL_RCC_USART6_CLK_ENABLE();
+	
   huart6.Instance = USART6;
   huart6.Init.BaudRate = 115200;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
@@ -59,6 +60,7 @@ void USART6_Init(void)
 	
 	HAL_NVIC_SetPriority(USART6_IRQn, 0,3);
 	HAL_NVIC_EnableIRQ(USART6_IRQn);
+	__HAL_UART_ENABLE_IT(&huart6,UART_IT_RXNE);
 }
 
 /**
