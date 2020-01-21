@@ -101,15 +101,17 @@ void USART6_Init(void);
 void send_time(RTC_TimeTypeDef* time, RTC_DateTypeDef* date)
 	{
 		char time_string[14];
-		sprintf(time_string, "%.2d:%.2d:%.2d.%.3d\r\n", time->Hours, time->Minutes, time->Seconds, time->SubSeconds);
+		uint8_t millis = (float) 1000*(1023-time->SubSeconds)/1024.0;
+		sprintf(time_string, "%.2d:%.2d:%.2d.%.3d,\n", time->Hours, time->Minutes, time->Seconds, millis);
 		char data[30];
 		sprintf(data, "AT+S.SOCKDW=0,0,%d\r%s", strlen(time_string), time_string);
 		HAL_UART_Transmit(&huart6, (uint8_t*) data , strlen(data), 100);
 		char data1[30];
 		
 		char date_string[10];
-		sprintf(date_string, "%d.%.2d.%.2d", date->Date, date->Month, date->Year);
-		sprintf(data1, "AT+S.FSC=0:/test,%d\r%s",strlen(time_string), time_string);
+ 
+		sprintf(date_string, "%d.%d.%d", date->Date, (uint8_t)date->Month, date->Year);
+		sprintf(data1, "AT+S.FSC=0:/%s,%d\r%s", date_string, strlen(time_string), time_string);
 		HAL_UART_Transmit(&huart6, (uint8_t*) data1 , strlen(data1), 100);
 	}
 /* USER CODE END 0 */
@@ -192,21 +194,21 @@ Error_Handler();
 	
 	HAL_NVIC_DisableIRQ(USART6_IRQn);
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
-	while(time.Seconds != 3)
+	while(time.Seconds != 15)
 	{
 		__nop();
 	}
 	switch(counter)
 	{
-		case(30):
+		case 30:
 			starter_mode = AUTO_START_30;
 			counter_reload = 30;
 			break;
-		case(60):
+		case 60:
 			starter_mode = AUTO_START_60;
 			counter_reload = 60;
 			break;
-		case(3):
+		case 3:
 			starter_mode = EXTERNAL;
 			counter_reload = 3+1;
 			break;
@@ -242,7 +244,7 @@ Error_Handler();
 		__nop();
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
-	send_time(&time, &date);
+	send_time( (RTC_TimeTypeDef*) &time, &date);
 	LED_RED_ON();
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
@@ -256,7 +258,7 @@ Error_Handler();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
-	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDW=0,0,15\rHello, World!\n\r", 34, 100);
+	//HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDW=0,0,15\rHello, World!\n\r", 34, 100);
 	
 	
   /* USER CODE END 2 */
