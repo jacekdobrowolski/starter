@@ -98,7 +98,20 @@ void USART6_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void send_time(RTC_TimeTypeDef* time, RTC_DateTypeDef* date)
+	{
+		char time_string[14];
+		sprintf(time_string, "%.2d:%.2d:%.2d.%.3d\r\n", time->Hours, time->Minutes, time->Seconds, time->SubSeconds);
+		char data[30];
+		sprintf(data, "AT+S.SOCKDW=0,0,%d\r%s", strlen(time_string), time_string);
+		HAL_UART_Transmit(&huart6, (uint8_t*) data , strlen(data), 100);
+		char data1[30];
+		
+		char date_string[10];
+		sprintf(date_string, "%d.%.2d.%.2d", date->Date, date->Month, date->Year);
+		sprintf(data1, "AT+S.FSC=0:/test,%d\r%s",strlen(time_string), time_string);
+		HAL_UART_Transmit(&huart6, (uint8_t*) data1 , strlen(data1), 100);
+	}
 /* USER CODE END 0 */
 
 /**
@@ -172,10 +185,13 @@ Error_Handler();
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 00, 00, TM1637_SEPARATOR_ON);
 	MX_RTC_Init();
-	//LED_GREEN_ON();
+	LED_GREEN_ON();
 	// Starter mode selection
 	starter_mode = SETUP;
 	counter = 30;
+	
+	HAL_NVIC_DisableIRQ(USART6_IRQn);
+	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
 	while(time.Seconds != 3)
 	{
 		__nop();
@@ -197,7 +213,7 @@ Error_Handler();
 		default:
 			Error_Handler();
 	}
-	//LED_GREEN_OFF();
+	LED_GREEN_OFF();
 	
 	// open 8888 tcp socket
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
@@ -221,16 +237,16 @@ Error_Handler();
 	
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
+	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
+	{
+		__nop();
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
-	PRINT("SETUP TIME: %d:%d\r\n", time.Hours, time.Minutes);
+	send_time(&time, &date);
 	LED_RED_ON();
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 	
-	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
-	{
-		__nop();
 	}
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RCC_UART4_CLK_DISABLE();
@@ -240,7 +256,7 @@ Error_Handler();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
-	
+	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDW=0,0,15\rHello, World!\n\r", 34, 100);
 	
 	
   /* USER CODE END 2 */

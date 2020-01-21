@@ -69,7 +69,7 @@ extern UART_HandleTypeDef huart4;
 /* USER CODE BEGIN EV */
 extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
 extern RTC_HandleTypeDef hrtc;
-
+extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 extern TM1637_TypeDef display_clock;
 extern TM1637_TypeDef display_counter;
@@ -80,6 +80,7 @@ extern volatile enum StartState{GATE_OPEN, GATE_CLOSED, NO_START}start_state;
 extern volatile uint8_t counter;
 extern volatile uint8_t counter_reload;
 extern uint8_t rx_data[64];
+extern void send_time();
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -252,8 +253,9 @@ void UART4_IRQHandler(void)
 
 void USART6_IRQHandler(void)
 {
-	LED_GREEN_TOGGLE();
-	
+	uint8_t* pdata;
+	HAL_UART_Receive_IT(&huart6, pdata, 1);
+	HAL_UART_Transmit_IT(&huart3, pdata , 1);
 	HAL_UART_IRQHandler(&huart6);
 }
 
@@ -276,7 +278,7 @@ void RTC_WKUP_IRQHandler()
 	else if(counter == 0)
 	{
 		start_state = GATE_OPEN;
-		//LED_GREEN_ON();
+		LED_GREEN_ON();
 		if(starter_mode != EXTERNAL)
 		{
 			counter = counter_reload;
@@ -298,9 +300,9 @@ void EXTI3_IRQHandler()
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
 	if(start_state == GATE_OPEN)
 	{
-		//LED_GREEN_OFF();
+		LED_GREEN_OFF();
 		
-		// send time
+		send_time(&time, &date);
 		
 	}	else if(start_state == GATE_CLOSED)	{
 		
