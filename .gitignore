@@ -25,3 +25,5 @@
 *.hex
 *.axf
 *.bin
+
+/doc/html

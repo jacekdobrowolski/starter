@@ -69,21 +69,7 @@
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern UART_HandleTypeDef huart4;
 /* USER CODE BEGIN EV */
-extern volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
-extern RTC_HandleTypeDef hrtc;
-extern UART_HandleTypeDef huart3;
-extern UART_HandleTypeDef huart6;
-extern TM1637_TypeDef display_clock;
-extern TM1637_TypeDef display_counter;
-extern volatile RTC_TimeTypeDef time;
-volatile RTC_TimeTypeDef start_time;
-extern RTC_DateTypeDef date;
-extern volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 3, SETUP, INIT}starter_mode;
-extern volatile enum StartState{GATE_OPEN, GATE_CLOSED, NO_START}start_state;
-extern volatile uint8_t counter;
-extern volatile uint8_t counter_reload;
-extern uint8_t rx_data[64];
-extern void send_time();
+
 //uint8_t external_stop=1;
 /* USER CODE END EV */
 
@@ -263,7 +249,7 @@ void USART6_IRQHandler(void)
 	HAL_UART_IRQHandler(&huart6);
 }
 
-void RTC_WKUP_IRQHandler()
+void RTC_WKUP_IRQHandler(void)
 {	
 // reseting wakeup flag must be done in software
 	//HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
@@ -301,7 +287,7 @@ void RTC_WKUP_IRQHandler()
 	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
 }
 
-void EXTI3_IRQHandler()
+void EXTI3_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
 	LED_YELLOW_TOGGLE();
@@ -325,7 +311,7 @@ void EXTI3_IRQHandler()
 	}
 }
 
-void EXTI15_10_IRQHandler()
+void EXTI15_10_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
 	if(starter_mode == EXTERNAL) {
