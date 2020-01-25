@@ -109,7 +109,6 @@ void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 		char data1[30];
 		
 		char date_string[10];
- 
 		sprintf(date_string, "%d.%d.%d", date->Date, (uint8_t)date->Month, date->Year);
 		sprintf(data1, "AT+S.FSC=0:/%s,%d\r%s", date_string, strlen(time_string), time_string);
 		HAL_UART_Transmit(&huart6, (uint8_t*) data1 , strlen(data1), 100);
@@ -123,7 +122,7 @@ void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	
   /* USER CODE END 1 */
    
   /* USER CODE BEGIN Boot_Mode_Sequence_0 */
@@ -138,6 +137,7 @@ int main(void)
   {
   Error_Handler();
   }
+
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -169,7 +169,7 @@ Error_Handler();
 /* USER CODE END Boot_Mode_Sequence_2 */
 
   /* USER CODE BEGIN SysInit */
-
+	
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -185,6 +185,8 @@ Error_Handler();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 	
+	
+
 	MX_RTC_Init();
 	LED_GREEN_ON();
 	// Starter mode selection
@@ -225,33 +227,31 @@ Error_Handler();
 	//starter_mode = (int) setup_mode;
 	time.Seconds = 0;
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 
 	// Setting up RTC with GPS data
-	uint8_t checksum = 0;
+	unsigned int checksum = 0x0;
 	MX_UART4_Init();
 	while(checksum != 6)
 	{
 		HAL_UART_Receive(&huart4, rx_data, 64, 1000);
-		checksum = sscanf((const char*)rx_data, "$GPZDA,%2u%2d%2d.00,%2d,%2d,%4d,00,00*%*X",
+		checksum = sscanf((const char*)rx_data, "$GPZDA,%2u%2d%2d.00,%2d,%2d,%4d,00,00*%2X",
 			(unsigned int *)&time.Hours, (unsigned int *)&time.Minutes, (unsigned int *)&time.Seconds,
-				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year);
-		//LED_GREEN_TOGGLE();
+				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year, &checksum);
 	}
-	
+	PRINT("%.2d:%.2d:%.2d.%.3d\t%d-%d-%d", time.Hours, time.Minutes, time.SecondFraction, time.SubSeconds, date.Date, date.Month, date.Year);
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
-	{
-		__nop();
-	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 	
-	send_time( (RTC_TimeTypeDef*) &time, &date);
-	LED_RED_ON();
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 	
+	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
+	{
+		__nop();
 	}
+	
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RCC_UART4_CLK_DISABLE();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
@@ -259,7 +259,7 @@ Error_Handler();
 	//Bez tego sie psuje
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
-	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
+//	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
 	//HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDW=0,0,15\rHello, World!\n\r", 34, 100);
 	
 	

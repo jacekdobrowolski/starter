@@ -257,13 +257,13 @@ void RTC_WKUP_IRQHandler(void)
 	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
 	
 	HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-	HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 	
 	if(starter_mode == AUTO_START)
 	{
 		counter--;
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
 		if(counter == GATE_ARMED_TIME)
 		{
 			start_state = GATE_CLOSED;
@@ -299,7 +299,7 @@ void RTC_WKUP_IRQHandler(void)
 			counter--;
 		}
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
 		if(counter == 0 && start_state == GATE_OPEN)
 		{
 			LED_GREEN_ON();
@@ -339,7 +339,7 @@ void EXTI3_IRQHandler(void)
 		if(start_state == GATE_OPEN)
 		{
 			HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-			HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+			HAL_RTC_GetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 			send_time(&time, &date);
 			LED_GREEN_OFF();
 			start_state = NO_START;
@@ -360,7 +360,7 @@ void EXTI15_10_IRQHandler(void)
 	{
 		time.Seconds = 0;
 		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+		HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 		
 		if(counter == 30) {
 			counter = 60;
@@ -369,7 +369,7 @@ void EXTI15_10_IRQHandler(void)
 		} else if(counter == 3) {
 			counter = 30;
 		}
-		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
 	}
 }
 
