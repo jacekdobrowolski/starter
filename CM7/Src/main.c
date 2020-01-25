@@ -239,7 +239,7 @@ Error_Handler();
 			(unsigned int *)&time.Hours, (unsigned int *)&time.Minutes, (unsigned int *)&time.Seconds,
 				(unsigned int *)&date.WeekDay, (unsigned int *)&date.Month, (unsigned int *)&date.Year, &checksum);
 	}
-	PRINT("%.2d:%.2d:%.2d.%.3d\t%d-%d-%d", time.Hours, time.Minutes, time.SecondFraction, time.SubSeconds, date.Date, date.Month, date.Year);
+	PRINT("%.2d:%.2d:%.2d\t%d-%d-%d", time.Hours, time.Minutes, time.Seconds, date.Date, date.Month, date.Year);
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);

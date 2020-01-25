@@ -26,4 +26,6 @@
 *.axf
 *.bin
 
+*.__i
+
 /doc/html
