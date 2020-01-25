@@ -263,19 +263,20 @@ void RTC_WKUP_IRQHandler(void)
 		counter--;
 	}
 	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
-	if(counter == GATE_ARMED)
+	
+	if(counter == 0)
 	{
-		start_state = GATE_CLOSED;
-	}
-	else if(counter == 0)
-	{
-		start_state = GATE_OPEN;
 		LED_GREEN_ON();
-		start_time = time;
-		if(starter_mode != EXTERNAL)
+		if(starter_mode == AUTO_START_30 || starter_mode == AUTO_START_60)
 		{
+			start_state = GATE_OPEN;
+			start_time = time;
 			counter = counter_reload;
 		}
+	}
+	else if(counter == GATE_ARMED && starter_mode != EXTERNAL)
+	{
+		start_state = GATE_CLOSED;
 	}
 	else if(counter == counter_reload - NO_START_DELAY)
 	{
@@ -284,7 +285,7 @@ void RTC_WKUP_IRQHandler(void)
 		LED_GREEN_OFF();
 	}
 	TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_OFF);
-	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
+	//TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
 }
 
 void EXTI3_IRQHandler(void)
@@ -295,19 +296,23 @@ void EXTI3_IRQHandler(void)
 	{
 		// start potwierdzony
 		LED_GREEN_OFF();
-		send_time(&start_time, &date);
 		start_state = NO_START;
+		if(starter_mode == EXTERNAL)
+		{
+			HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
+			HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+			start_time = time;
+		}
+		send_time(&start_time, &date);
 	}	else if(start_state == GATE_CLOSED)	{
-		
-		if(starter_mode != EXTERNAL)
+		if(starter_mode == AUTO_START_30 || starter_mode == AUTO_START_60)
 		{
 			// falstart
 			LED_RED_ON();
+			LED_GREEN_OFF();
 			send_time(&start_time, &date);
 			start_state= NO_START;
 		}
-	} else {
-	
 	}
 }
 
@@ -315,7 +320,7 @@ void EXTI15_10_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
 	if(starter_mode == EXTERNAL) {
-		start_state = GATE_CLOSED;
+		start_state = GATE_OPEN;
 		counter = counter_reload;
 		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_OFF);
 	} 

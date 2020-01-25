@@ -98,10 +98,10 @@ void USART6_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void send_time(RTC_TimeTypeDef* time, RTC_DateTypeDef* date)
+void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 	{
 		char time_string[14];
-		uint8_t millis = (float) 1000*(1023-time->SubSeconds)/1024.0;
+		uint8_t millis = (float) 1000*(1023-time->SubSeconds)/1024.0f;
 		sprintf(time_string, "%.2d:%.2d:%.2d.%.3d,\n", time->Hours, time->Minutes, time->Seconds, millis);
 		char data[30];
 		sprintf(data, "AT+S.SOCKDW=0,0,%d\r%s", strlen(time_string), time_string);

@@ -28,7 +28,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "main.h"
+#include "TM1637.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -54,7 +55,7 @@ extern volatile enum StartState { GATE_OPEN,
 extern volatile uint8_t counter;
 extern volatile uint8_t counter_reload;
 extern uint8_t rx_data[64];
-extern void send_time();
+extern void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date);
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
