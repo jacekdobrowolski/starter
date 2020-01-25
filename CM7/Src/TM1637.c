@@ -1,8 +1,5 @@
 #include "TM1637.h"
 
-void TM1637_DelayUs(unsigned int i)
-{
-}
 
 void TM1637_PinsToIn(TM1637_TypeDef *display)
 {
@@ -29,42 +26,35 @@ void TM1637_PinsToOut(TM1637_TypeDef *display)
 
 }
 
-void TM1637_Start (TM1637_TypeDef *display) // 1637 start 
+void TM1637_Start (TM1637_TypeDef *display)
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_SET);
-	TM1637_DelayUs (2);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_RESET);
 }
 
-void TM1637_Ask (TM1637_TypeDef *display) // 1637 Answer 
+void TM1637_Ask (TM1637_TypeDef *display)
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
-	TM1637_DelayUs(5); 
-// After the falling edge of the eighth clock delay 5us, ACK signals the beginning of judgment 
 	TM1637_PinsToIn(display);
 	while (HAL_GPIO_ReadPin(display->GPIO, display->dio))
 	{
 	}
 	TM1637_PinsToOut(display);
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_SET);
-	TM1637_DelayUs(2);
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
 } 
 
-void TM1637_Stop (TM1637_TypeDef *display) // 1637 Stop
+void TM1637_Stop (TM1637_TypeDef *display)
 {
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_RESET);
-	TM1637_DelayUs(2);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_RESET);
-	TM1637_DelayUs(2);
 	HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_SET);
-	TM1637_DelayUs(2);
 	HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_SET);
 
 } 
 
-void TM1637_WriteByte(TM1637_TypeDef *display, unsigned char oneByte) // write a byte 
+void TM1637_WriteByte(TM1637_TypeDef *display, unsigned char oneByte)
 {
 	unsigned char i;
 	for (i = 0; i < 8; i++)
@@ -78,18 +68,15 @@ void TM1637_WriteByte(TM1637_TypeDef *display, unsigned char oneByte) // write a
 		{
 			HAL_GPIO_WritePin(display->GPIO, display->dio, GPIO_PIN_RESET);
 		} 
-		TM1637_DelayUs(3); 
 		oneByte = oneByte >> 1; 
 		HAL_GPIO_WritePin(display->GPIO, display->clk, GPIO_PIN_SET);
-		TM1637_DelayUs(3); 
 	}
 }
 
-void TM1637_setBrightness(TM1637_TypeDef *display, unsigned char i)
+void TM1637_setBrightness(TM1637_TypeDef *display, unsigned char brightness)
 {
-	//0x8f maximum
 	TM1637_Start(display);   
-	TM1637_WriteByte(display, i); //Open display, maximum brightness
+	TM1637_WriteByte(display, i);
 	TM1637_Ask(display);   
 	TM1637_Stop(display); 
 }
@@ -134,8 +121,8 @@ unsigned char TM1637_ConvertDecToSegment(uint16_t digit)
 			0x07,    // 7
 			0x7f,    // 8
 			0x6f,    // 9	
-			0xff,   // 10 all
-			0x00, //11 empty
+			0xff,   // 10 wszystkie
+			0x00, //11 puste
 		};
 		return digits[digit];
 
@@ -145,12 +132,10 @@ void TM1637_WriteDigits(TM1637_TypeDef *display, uint16_t digits[], uint8_t has_
 {
 	TM1637_Start(display); 
 	TM1637_WriteByte(display, TM1637_AUTO_INCREMENT_ADDRESS);
-	//40H address is automatically incremented by 1 mode, 44H fixed address mode
 	TM1637_Ask(display); 
 	TM1637_Stop(display); 
 	TM1637_Start(display); 
 	TM1637_WriteByte(display, TM1637_FIRST_SEGMENT_ADDRESS); 
-	//Set the first address
 	TM1637_Ask(display); 
 	unsigned char i;
 	unsigned char separator;
@@ -166,7 +151,7 @@ void TM1637_WriteDigits(TM1637_TypeDef *display, uint16_t digits[], uint8_t has_
 			separator = TM1637_NO_SEPARATOR;
 		}
 		
-		TM1637_WriteByte(display, TM1637_ConvertDecToSegment(digits[i])|separator);  //Send data
+		TM1637_WriteByte(display, TM1637_ConvertDecToSegment(digits[i])|separator);
 		TM1637_Ask(display); 
 	} 
 	
