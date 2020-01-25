@@ -43,15 +43,16 @@ extern TM1637_TypeDef display_clock;
 extern TM1637_TypeDef display_counter;
 extern volatile RTC_TimeTypeDef time;
 volatile RTC_TimeTypeDef start_time;
-extern RTC_DateTypeDef date;
-extern volatile enum StarterMode { AUTO_START_60 = 60,
-                                   AUTO_START_30 = 30,
-                                   EXTERNAL = 3,
+extern volatile RTC_DateTypeDef date;
+extern volatile enum StarterMode { AUTO_START,
+                                   EXTERNAL,
                                    SETUP,
                                    INIT } starter_mode;
 extern volatile enum StartState { GATE_OPEN,
                                   GATE_CLOSED,
-                                  NO_START } start_state;
+																	GATE_READY,
+                                  NO_START,
+																	FALSTART} start_state;
 extern volatile uint8_t counter;
 extern volatile uint8_t counter_reload;
 extern uint8_t rx_data[64];

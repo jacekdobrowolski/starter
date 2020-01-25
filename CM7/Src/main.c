@@ -68,11 +68,11 @@ UART_HandleTypeDef huart6;
 TM1637_TypeDef display_clock;
 TM1637_TypeDef display_counter;
 volatile RTC_TimeTypeDef time = {0};
-RTC_DateTypeDef date = {0};
+volatile RTC_DateTypeDef date = {0};
 volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
-volatile enum StarterMode{AUTO_START_60 = 60, AUTO_START_30 = 30, EXTERNAL = 3, SETUP, INIT}starter_mode;
+volatile enum StarterMode{AUTO_START, EXTERNAL, SETUP, INIT}starter_mode;
 volatile uint8_t counter_reload;
-volatile enum StartState{GATE_OPEN, GATE_CLOSED, NO_START}start_state;
+volatile enum StartState{GATE_OPEN, GATE_CLOSED, GATE_READY,  NO_START, FALSTART}start_state;
 volatile uint8_t counter;
 uint8_t rx_data[64];
 /* USER CODE END PV */
@@ -184,13 +184,15 @@ Error_Handler();
 	
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
-	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
-	TM1637_WriteTime(&display_counter, 00, 00, TM1637_SEPARATOR_ON);
+	
 	MX_RTC_Init();
 	LED_GREEN_ON();
 	// Starter mode selection
 	starter_mode = SETUP;
 	counter = 30;
+	
+	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
+	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
 	
 	HAL_NVIC_DisableIRQ(USART6_IRQn);
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
@@ -201,16 +203,16 @@ Error_Handler();
 	switch(counter)
 	{
 		case 30:
-			starter_mode = AUTO_START_30;
+			starter_mode = AUTO_START;
 			counter_reload = 30;
 			break;
 		case 60:
-			starter_mode = AUTO_START_60;
+			starter_mode = AUTO_START;
 			counter_reload = 60;
 			break;
 		case 3:
 			starter_mode = EXTERNAL;
-			counter_reload = 3+1;
+			counter_reload = 4;
 			break;
 		default:
 			Error_Handler();
