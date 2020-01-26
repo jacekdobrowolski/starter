@@ -54,30 +54,50 @@ volatile RTC_DateTypeDef date = {0};
 /**
  * Enumerator określający stan synchronizacji
  */
-volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
+volatile enum SyncState{
+    /*! Zegar zsynchronizowany z czasem UTC*/
+    IN_SYNC,
+    /*! Zegar czeka na synchronizację */
+    WAITING_FOR_SYNC
+    }
+    /*! przechowuje stan synchronizacji zegara z czasem UTC */
+    gps_sync;
 
 /**
  * Enumerator określający tryb pracy startera
  */
 volatile enum StarterMode{
-    AUTO_START, /*!  Wyzwalanie automatyczne co 30 lub 60 sekund w zależności od ::counter_reload */
-    EXTERNAL,   /*!  Wyzwalanie z przycisku użytkownika */
-    SETUP,      /*!  Wybór trybu pracy */
-    INIT        /*!  Inicjalizacja */
-    }starter_mode;
+    /*!  Wyzwalanie automatyczne co 30 lub 60 sekund w zależności od ::counter_reload */
+    AUTO_START,
+    /*!  Wyzwalanie z przycisku użytkownika */
+    EXTERNAL,
+    /*!  Wybór trybu pracy */
+    SETUP,
+    /*!  Inicjalizacja */
+    INIT
+    }
+    /*! przechwouje tryb pracy startera */
+    starter_mode;
 
 /**
  * Enumerator okjreślający stan startu
  */
 volatile enum StartState{
-    GATE_OPEN,   /*! Bramka otwarta zawodnik może startować przecięcie zostanie uznane za start */
-    GATE_CLOSED, /*! Bramka zamknięta przcięcie w tym momencie spowoduje falstart */
-    GATE_READY,  /*! Bramka jest przygotowana do startu jeśli w tym momencie nastąpi
-                     przecięcie odliczanie zacznie się odpoczątku i zapali się czerwona
-                     dioda sygnalizująca usterke fotokomórki */
-    NO_START,    /*! Bramka jest w spoczynku przecięcie zostanie zignorowane */
-    FALSTART     /*! Bramka została przecięta przed końcem odliczania */
-    }start_state;
+    /*! Bramka otwarta zawodnik może startować przecięcie zostanie uznane za start */
+    GATE_OPEN,
+    /*! Bramka zamknięta przcięcie w tym momencie spowoduje falstart */
+    GATE_CLOSED,
+    /*! Bramka jest przygotowana do startu jeśli w tym momencie nastąpi
+        przecięcie odliczanie zacznie się odpoczątku i zapali się czerwona
+        dioda sygnalizująca usterke fotokomórki */
+    GATE_READY,
+    /*! Bramka jest w spoczynku przecięcie zostanie zignorowane */
+    NO_START,
+    /*! Bramka została przecięta przed końcem odliczania */
+    FALSTART
+    }
+    /*!  Przechowuje stan startu */
+    start_state;
 
 /**
  * Główny licznik odlicza czas do startu

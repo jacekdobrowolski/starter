@@ -6,7 +6,7 @@
   *                   Ten plik zawiera deklaracje funkcji inicjalizujących peryferia
   ******************************************************************************
   */
- 
+
 #ifndef INIT_FUNCTIONS_H
 #define INIT_FUNCTIONS_H
 
@@ -15,8 +15,6 @@
 
 /**
   * @brief Inicjalizacja USART do komunikacji z modułem WiFi
-  * @param Brak
-  * @retval Brak
   */
 void USART6_Init(void);
 
@@ -24,52 +22,38 @@ void USART6_Init(void);
   * Inicjalizuje piny GPIO i ustawia przerwanie ::EXTI3_IRQHandler
   * na rosnące zbocze
   * @brief Inicjalizacja Fotokomórki
-  * @param Brak
-  * @retval Brak
   */
 void GPIO_IR_Init();
 
 /**
   * Inicjalizuje piny GPIO i ustawia przerwanie ::EXTI15_10_IRQHandler
   * @brief Inicjalizacja przycisku użytkownika
-  * @param Brak
-  * @retval Brak
   */
 void GPIO_BUTTON_Init();
 
 /**
   * @brief GPIO for onboard LED's Initialization Function
-  * @param Brak
-  * @retval Brak
   */
 void GPIO_LED_Init();
 
 /**
   * @brief GPIO Initialization Function
-  * @param Brak
-  * @retval Brak
   */
 static void MX_GPIO_Init(void);
 
 /**
   * @brief USART3 Initialization Function
-  * @param Brak
-  * @retval Brak
   */
 void MX_USART3_UART_Init(void);
 
 /**
   * @brief Inicjalizuje UART4 do komunikacji z modułem GPS
-  * @param Brak
-  * @retval Brak
   */
 void MX_UART4_Init(void);
 
 /**
  *  Inicjalizuje przerwanie ::RTC_WKUP_IRQHandler() do wywoływania co sekundę
   * @brief Inicjalizuje RTC
-  * @param Brak
-  * @retval Brak
   * Enables RTC_WKUP_IRQn_Handler every second
   */
 void MX_RTC_Init(void);

@@ -19,9 +19,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 #include "stm32h7xx_it.h"
-#include "TM1637.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -33,9 +31,14 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- #define GATE_ARMED_TIME 5 // Sekundy przed startem kiedy przeciecie fotoceli bedzie traktowane jako falstart
- #define NO_START_DELAY 5 // Tyle sekund po starcie jesli nie nastapilo przeciecie start uwazan jest za niewazny
- #define GATE_READY_TIME 10 // Czas przed uzbroejniem bramki w którym jesli nastapi przecięcie odliczanie zostaje przerwane
+
+/// Sekundy przed startem kiedy przeciecie fotokomórki będzie traktowane jako falstart
+ #define GATE_ARMED_TIME 5
+/// Tyle sekund po starcie jesli nie nastapilo przeciecie start uwazany jest za niewazny
+ #define NO_START_DELAY 5
+/// Czas przed uzbroejniem bramki w którym jesli nastapi przecięcie odliczanie zostaje przerwane
+ #define GATE_READY_TIME 10
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,15 +62,14 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern DMA_HandleTypeDef hdma_uart4_rx;
-extern UART_HandleTypeDef huart4;
+
 /* USER CODE BEGIN EV */
 
 //uint8_t external_stop=1;
 /* USER CODE END EV */
 
 /******************************************************************************/
-/*           Cortex Processor Interruption and Exception Handlers          */ 
+/*           Cortex Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
   * @brief This function handles Non maskable interrupt.
@@ -75,7 +77,7 @@ extern UART_HandleTypeDef huart4;
 void NMI_Handler(void)
 {
   /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
-	
+
   /* USER CODE END NonMaskableInt_IRQn 0 */
   /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
@@ -202,9 +204,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32h7xx.s).                    */
 /******************************************************************************/
 
-/**
-  * @brief This function handles UART4 global interrupt.
-  */
 void UART4_IRQHandler(void)
 {
   /* USER CODE BEGIN UART4_IRQn 0 */
@@ -218,8 +217,6 @@ void UART4_IRQHandler(void)
   /* USER CODE END UART4_IRQn 1 */
 }
 
-/* USER CODE BEGIN 1 */
-
 void USART6_IRQHandler(void)
 {
 	uint8_t* pdata;
@@ -229,14 +226,14 @@ void USART6_IRQHandler(void)
 }
 
 void RTC_WKUP_IRQHandler(void)
-{	
+{
 	// reseting wakeup flag must be done in software
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 	__HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
-	
+
 	HAL_RTC_GetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_GetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
-	
+
 	if(starter_mode == AUTO_START)
 	{
 		counter--;
@@ -285,7 +282,6 @@ void RTC_WKUP_IRQHandler(void)
 	}
 }
 
-// fotocela
 void EXTI3_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
@@ -324,8 +320,7 @@ void EXTI3_IRQHandler(void)
 		}
 	}
 }
-/**
- */
+
 void EXTI15_10_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
@@ -340,7 +335,7 @@ void EXTI15_10_IRQHandler(void)
 		time.Seconds = 0;
 		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 		HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
-		
+
 		if(counter == 30) {
 			counter = 60;
 		}else if(counter == 60) {

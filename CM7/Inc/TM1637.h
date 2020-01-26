@@ -12,14 +12,23 @@
 #include <stdint.h>
 #include "stm32h7xx_hal.h"
 
+/// Włączyć dwukropek pośrodku wyświetlacza
 #define TM1637_SEPARATOR_ON 1
+/// Wyłączyć dwukropek pośrodku wyświetlacza
 #define TM1637_SEPARATOR_OFF 0
+/// Maksymalna jasność wyświetlacza
 #define TM1637_MAX_BRIGHTNESS 0x8f
+/// Stały adres TM1637
 #define TM1637_FIXED_ADDRESS 0x44
+/// Odstęp pomiędzy adresami
 #define TM1637_AUTO_INCREMENT_ADDRESS 0x40
+/// Adres pierwszego segmentu
 #define TM1637_FIRST_SEGMENT_ADDRESS 0xc0
+/// Bit odpowiadający dwukropkowi pośrodku wyświetlacza
 #define TM1637_SEPARATOR 0x80
+/// Brak separatora 
 #define TM1637_NO_SEPARATOR 0x00
+
 	/**
 	 * Struktura odpowiedzialna za przechowywanie wartosci potrzebnych do dzialania wyswietlacza TM1637
 	 */

@@ -38,9 +38,11 @@
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
- 
-#define HSEM_ID_0 (0U) /* HW semaphore 0*/
+/* USER CODE BEGIN PD */\
+
+/// HW semaphore 0
+#define HSEM_ID_0 (0U)
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,11 +51,16 @@
  * Maximum allowed characters to handle by PRINT
  */
 #define PRINT_SIZE 30
- 
+/**
+ * makro o składni printf transmitujące po UART STLINK
+ * \param FORMAT formatowanie jak w funkcjach standardowych
+ * \param ... lista wartości do foramowanego ciągu
+ */
 #define PRINT(FORMAT, ...) \
 	char str[PRINT_SIZE]; \
 	sprintf( str, FORMAT, __VA_ARGS__); \
 	HAL_UART_Transmit(&huart3, (unsigned char *)str, strlen(str), 10);
+
 /* USER CODE END PM */
 /* Private variables ---------------------------------------------------------*/
 
@@ -63,24 +70,21 @@
 #include "init_functions.h"
 
 /* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-//static void MX_DMA_Init(void);
-void MX_RTC_Init(void);
-void MX_UART4_Init(void);
-void MX_USART3_UART_Init(void);
+
 
 
 /* USER CODE BEGIN PFP */
-void GPIO_IR_Init(void);
-void GPIO_LED_Init(void);
-void GPIO_BUTTON_Init(void);
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
-void USART6_Init(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/**
+ * Wysyła podany czas poprzez socket oraz zapisauje na karcie SD
+ * \param time czas który zostanie wysłany
+ * \param date o nazwie zależnej od daty zostanie stworzony plik na karcie SD
+ */
 void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 	{
 		char time_string[14];
@@ -90,7 +94,7 @@ void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 		sprintf(data, "AT+S.SOCKDW=0,0,%d\r%s", strlen(time_string), time_string);
 		HAL_UART_Transmit(&huart6, (uint8_t*) data , strlen(data), 100);
 		char data1[30];
-		
+
 		char date_string[10];
 		sprintf(date_string, "%d.%d.%d", date->Date, (uint8_t)date->Month, date->Year);
 		sprintf(data1, "AT+S.FSC=0:/%s,%d\r%s", date_string, strlen(time_string), time_string);
@@ -105,11 +109,11 @@ void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	
+
   /* USER CODE END 1 */
-   
+
   /* USER CODE BEGIN Boot_Mode_Sequence_0 */
-    int32_t timeout; 
+    int32_t timeout;
   /* USER CODE END Boot_Mode_Sequence_0 */
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
@@ -152,33 +156,33 @@ Error_Handler();
 /* USER CODE END Boot_Mode_Sequence_2 */
 
   /* USER CODE BEGIN SysInit */
-	
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-	
+
 	MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	GPIO_LED_Init();
 	GPIO_IR_Init();
 	USART6_Init();
 	GPIO_BUTTON_Init();
-	
-	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
+
+	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD);
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
-	
-	
+
+
 
 	MX_RTC_Init();
 	LED_GREEN_ON();
 	// Starter mode selection
 	starter_mode = SETUP;
 	counter = 30;
-	
+
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
-	
+
 	HAL_NVIC_DisableIRQ(USART6_IRQn);
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
 	while(time.Seconds != 15)
@@ -203,7 +207,7 @@ Error_Handler();
 			Error_Handler();
 	}
 	LED_GREEN_OFF();
-	
+
 	// open 8888 tcp socket
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDON=8888,t\n\r", 21, 100);
 	TM1637_WriteTime(&display_counter, 0, 0, TM1637_SEPARATOR_OFF);
@@ -226,26 +230,26 @@ Error_Handler();
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
-	
+
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
-	
+
 	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
 	{
 		__nop();
 	}
-	
+
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RCC_UART4_CLK_DISABLE();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
-	
+
 	//Bez tego sie psuje
-	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
+	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD);
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 
   while (1)
   {
-		__nop();	
+		__nop();
   }
   /* USER CODE END 3 */
 }
@@ -272,7 +276,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

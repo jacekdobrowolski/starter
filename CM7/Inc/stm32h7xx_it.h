@@ -24,7 +24,7 @@
 
 #ifdef __cplusplus
  extern "C" {
-#endif 
+#endif
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -60,31 +60,37 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 /* USER CODE BEGIN EFP */
-/**
- * Przerwanie DMA pozostałość po CubeMx do usunięcia
- */
-void DMA1_Stream0_IRQHandler(void);
+
 /**
  * Obsługuje przerwanie UART połączonego z modulem GPS
  * Wykorzystane synchronizacji impulsu nowej sekundy
+ * \retval None
  */
 void UART4_IRQHandler(void);
+
 /**
  * Obsługuje przerwania UART połączonego z modułem WiFi
+ * \retval None
  */
 void USART6_IRQHandler(void);
+
 /**
  * Przerwanie wywoływane co sekunde
  * Odświeża wyświetlacze i otwiera bramkę
+ * \retval None
  */
 void RTC_WKUP_IRQHandler(void);
+
 /**
  * Przerwanie generowane przez przecięcie wiązki fotokomórki
  * Kluczowe w detekcji falstartu
+ * \retval None
  */
 void EXTI3_IRQHandler(void);
+
 /**
  * Przerwanie związane z przyciskiem użytownika
+ * \retval None
  */
 void EXTI15_10_IRQHandler(void);
 /* USER CODE END EFP */

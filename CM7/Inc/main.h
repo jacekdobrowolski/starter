@@ -58,9 +58,13 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+/// pin RX UART STLINK
 #define STLINK_RX_Pin GPIO_PIN_8
+/// port RX UART STLINK
 #define STLINK_RX_GPIO_Port GPIOD
+/// pin TX UART STLINK
 #define STLINK_TX_Pin GPIO_PIN_9
+/// port TX UART STLINK
 #define STLINK_TX_GPIO_Port GPIOD
 /* USER CODE BEGIN Private defines */
 
