@@ -47,6 +47,11 @@ TM1637_TypeDef display_counter;
 volatile RTC_TimeTypeDef time = {0};
 
 /**
+ * Struktura przechowywująca czas ostatniego startu
+ */
+volatile RTC_TimeTypeDef start_time = {0};
+
+/**
  * Struktura przechowywująca datę
  */
 volatile RTC_DateTypeDef date = {0};

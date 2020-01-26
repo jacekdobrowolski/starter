@@ -23,23 +23,23 @@ void USART6_Init(void);
   * na rosnące zbocze
   * @brief Inicjalizacja Fotokomórki
   */
-void GPIO_IR_Init();
+void GPIO_IR_Init(void);
 
 /**
   * Inicjalizuje piny GPIO i ustawia przerwanie ::EXTI15_10_IRQHandler
   * @brief Inicjalizacja przycisku użytkownika
   */
-void GPIO_BUTTON_Init();
+void GPIO_BUTTON_Init(void);
 
 /**
   * @brief GPIO for onboard LED's Initialization Function
   */
-void GPIO_LED_Init();
+void GPIO_LED_Init(void);
 
 /**
   * @brief GPIO Initialization Function
   */
-static void MX_GPIO_Init(void);
+void MX_GPIO_Init(void);
 
 /**
   * @brief USART3 Initialization Function

@@ -1,4 +1,5 @@
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Src/stm32h7xx_it.c
+starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/stm32h7xx_it.h
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/main.h
 starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/stm32h7xx_hal_conf.h
@@ -36,5 +37,6 @@ starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_
 starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h
 starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h
 starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
-starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/stm32h7xx_it.h
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/TM1637.h
+starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/led_functions.h
+starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/global_variables.h

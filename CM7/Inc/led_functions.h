@@ -9,7 +9,7 @@
 #ifndef LED_FUNCTIONS_H
 #define LED_FUNCTIONS_H
 #include "stm32h755xx.h"
-#include "stm32h7xx_hal_gpio.h"
+#include "stm32h7xx_hal.h"
 
 /**
  * Włącza czerwoną diodę

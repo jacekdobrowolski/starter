@@ -559,6 +559,21 @@
               <FileType>5</FileType>
               <FilePath>..\CM7\Inc\led_functions.h</FilePath>
             </File>
+            <File>
+              <FileName>global_variables.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\global_variables.h</FilePath>
+            </File>
+            <File>
+              <FileName>init_functions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\init_functions.h</FilePath>
+            </File>
+            <File>
+              <FileName>init_functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\init_functions.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1345,6 +1360,21 @@
               <FileName>led_functions.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\CM7\Inc\led_functions.h</FilePath>
+            </File>
+            <File>
+              <FileName>global_variables.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\global_variables.h</FilePath>
+            </File>
+            <File>
+              <FileName>init_functions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\init_functions.h</FilePath>
+            </File>
+            <File>
+              <FileName>init_functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\init_functions.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -4,6 +4,8 @@
 "starter_cm7\stm32h7xx_it_1.o"
 "starter_cm7\stm32h7xx_hal_msp_1.o"
 "starter_cm7\tm1637.o"
+"starter_cm7\led_functions.o"
+"starter_cm7\init_functions.o"
 "starter_cm7\stm32h7xx_hal_cortex.o"
 "starter_cm7\stm32h7xx_hal_rtc.o"
 "starter_cm7\stm32h7xx_hal_rtc_ex.o"

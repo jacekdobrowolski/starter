@@ -41,4 +41,5 @@ starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 starter_cm7\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 starter_cm7\main_1.o: ../CM7/Inc/led_functions.h
+starter_cm7\main_1.o: ../CM7/Inc/global_variables.h
 starter_cm7\main_1.o: ../CM7/Inc/init_functions.h
