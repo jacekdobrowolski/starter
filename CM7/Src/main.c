@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "led_functions.h"
+#include "global_variables.h"
 
 /* USER CODE END Includes */
 
@@ -43,38 +45,19 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+/**
+ * Maximum allowed characters to handle by PRINT
+ */
 #define PRINT_SIZE 30
+ 
 #define PRINT(FORMAT, ...) \
 	char str[PRINT_SIZE]; \
 	sprintf( str, FORMAT, __VA_ARGS__); \
 	HAL_UART_Transmit(&huart3, (unsigned char *)str, strlen(str), 10);
-#define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-#define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-#define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-#define LED_GREEN_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-#define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-#define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-#define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 /* USER CODE END PM */
 /* Private variables ---------------------------------------------------------*/
 
-RTC_HandleTypeDef hrtc;
-UART_HandleTypeDef huart4;
-UART_HandleTypeDef huart3;
-DMA_HandleTypeDef hdma_uart4_rx;
 
-/* USER CODE BEGIN PV */
-UART_HandleTypeDef huart6;
-TM1637_TypeDef display_clock;
-TM1637_TypeDef display_counter;
-volatile RTC_TimeTypeDef time = {0};
-volatile RTC_DateTypeDef date = {0};
-volatile enum SyncState{IN_SYNC, WAITING_FOR_SYNC}gps_sync;
-volatile enum StarterMode{AUTO_START, EXTERNAL, SETUP, INIT}starter_mode;
-volatile uint8_t counter_reload;
-volatile enum StartState{GATE_OPEN, GATE_CLOSED, GATE_READY,  NO_START, FALSTART}start_state;
-volatile uint8_t counter;
-uint8_t rx_data[64];
 /* USER CODE END PV */
 
 #include "init_functions.h"
@@ -259,14 +242,6 @@ Error_Handler();
 	//Bez tego sie psuje
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD); 
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
-//	HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
-	//HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.SOCKDW=0,0,15\rHello, World!\n\r", 34, 100);
-	
-	
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
 
   while (1)
   {
@@ -275,118 +250,6 @@ Error_Handler();
   /* USER CODE END 3 */
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
-
-  /** Supply configuration update enable 
-  */
-  HAL_PWREx_ConfigSupply(PWR_DIRECT_SMPS_SUPPLY);
-  /** Configure the main internal regulator output voltage 
-  */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
-
-  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
-  /** Configure LSE Drive Capability 
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
-  /** Initializes the CPU, AHB and APB busses clocks 
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 120;
-  RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 20;
-  RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
-  RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
-  RCC_OscInitStruct.PLL.PLLFRACN = 0;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB busses clocks 
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
-                              |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
-  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USART3
-                              |RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_USART6;
-  PeriphClkInitStruct.Usart234578ClockSelection = RCC_USART234578CLKSOURCE_D2PCLK1;
-  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-
-
-
-
-
-
-
-
-
-
-/** 
-  * Enable DMA controller clock
-  */
-/*
-static void MX_DMA_Init(void) 
-{
-*/
-  /* DMA controller clock enable */
-/*
-  __HAL_RCC_DMA1_CLK_ENABLE();
-*/
-  /* DMA interrupt init */
-  /* DMA1_Stream0_IRQn interrupt configuration */
-/*
-  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
-
-}
-*/
-
-
-
-
-/* USER CODE BEGIN 4 */
-
-
-
-
-
-
-
-
-
-
-/* USER CODE END 4 */
 
 /**
   * @brief  This function is executed in case of error occurrence.

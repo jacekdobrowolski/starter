@@ -3,7 +3,7 @@
 <title>Static Call Graph - [starter_CM7\starter_CM7.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image starter_CM7\starter_CM7.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Jan 25 22:54:40 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Jan 26 00:01:02 2020
 <BR><P>
 <H3>Maximum Stack Usage =        464 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -848,11 +848,11 @@ Global Symbols
 <P><STRONG><a name="[ca]"></a>HAL_DMA_Init</STRONG> (Thumb, 680 bytes, Stack size 40 bytes, stm32h7xx_hal_dma.o(i.HAL_DMA_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = HAL_DMA_Init &rArr; DMA_CalcDMAMUXChannelBaseAndMask
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_CheckFifoParam
+<BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
+<LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_CheckFifoParam
 <LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_CalcDMAMUXRequestGenBaseAndMask
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_CalcDMAMUXChannelBaseAndMask
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DMA_CalcBaseAndBitshift
-<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
 </UL>
@@ -906,12 +906,12 @@ Global Symbols
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_PeriphCLKConfig
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PWREx_ConfigSupply
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_CheckIdleState
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL3_Config
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCCEx_PLL2_Config
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_EnterInitMode
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_WaitForSynchro
-<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
-<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_CheckIdleState
 </UL>
 
 <P><STRONG><a name="[11a]"></a>HAL_HSEM_FastTake</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, stm32h7xx_hal_hsem.o(i.HAL_HSEM_FastTake))
@@ -1210,20 +1210,20 @@ Global Symbols
 <P><STRONG><a name="[ed]"></a>HAL_UART_IRQHandler</STRONG> (Thumb, 436 bytes, Stack size 24 bytes, stm32h7xx_hal_uart.o(i.HAL_UART_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = HAL_UART_IRQHandler &rArr; HAL_DMA_Abort_IT
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_TxCpltCallback
+<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_TxCpltCallback
 <LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_WakeupCallback
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_TxFifoEmptyCallback
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxFifoFullCallback
 <LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
+<LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
 </UL>
 <BR>[Called By]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART6_IRQHandler
 <LI><a href="#[3d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART4_IRQHandler
 </UL>
 
 <P><STRONG><a name="[f5]"></a>HAL_UART_Init</STRONG> (Thumb, 106 bytes, Stack size 8 bytes, stm32h7xx_hal_uart.o(i.HAL_UART_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = HAL_UART_Init &rArr; UART_SetConfig &rArr; HAL_RCCEx_GetD3PCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = HAL_UART_Init &rArr; UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
 <LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
@@ -1251,8 +1251,8 @@ Global Symbols
 <P><STRONG><a name="[fc]"></a>HAL_UART_Receive</STRONG> (Thumb, 248 bytes, Stack size 40 bytes, stm32h7xx_hal_uart.o(i.HAL_UART_Receive))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_UART_Receive &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
-<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<BR>[Calls]<UL><LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1273,8 +1273,8 @@ Global Symbols
 <P><STRONG><a name="[fe]"></a>HAL_UART_Transmit</STRONG> (Thumb, 190 bytes, Stack size 32 bytes, stm32h7xx_hal_uart.o(i.HAL_UART_Transmit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
-<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<BR>[Calls]<UL><LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_time
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -1311,7 +1311,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[100]"></a>MX_UART4_Init</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, main_1.o(i.MX_UART4_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_UART4_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; HAL_RCCEx_GetD3PCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_UART4_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_SetTxFifoThreshold
@@ -1322,7 +1322,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[102]"></a>MX_USART3_UART_Init</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, main_1.o(i.MX_USART3_UART_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_USART3_UART_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; HAL_RCCEx_GetD3PCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MX_USART3_UART_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_SetTxFifoThreshold
@@ -1522,21 +1522,21 @@ Global Symbols
 <P><STRONG><a name="[f9]"></a>UART_CheckIdleState</STRONG> (Thumb, 94 bytes, Stack size 24 bytes, stm32h7xx_hal_uart.o(i.UART_CheckIdleState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = UART_CheckIdleState &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
-<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<BR>[Calls]<UL><LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 </UL>
 
 <P><STRONG><a name="[f7]"></a>UART_SetConfig</STRONG> (Thumb, 3084 bytes, Stack size 64 bytes, stm32h7xx_hal_uart.o(i.UART_SetConfig))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = UART_SetConfig &rArr; HAL_RCCEx_GetD3PCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
-<BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetPLL3ClockFreq
+<BR>[Calls]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
+<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetPLL3ClockFreq
 <LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetPLL2ClockFreq
 <LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_GetD3PCLK1Freq
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
-<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 </UL>
@@ -1561,7 +1561,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32h755xx_cm7.o(RESET)
 </UL>
 <P><STRONG><a name="[116]"></a>USART6_Init</STRONG> (Thumb, 176 bytes, Stack size 40 bytes, main_1.o(i.USART6_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = USART6_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; HAL_RCCEx_GetD3PCLK1Freq &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = USART6_Init &rArr; HAL_UART_Init &rArr; UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_SetTxFifoThreshold
@@ -1601,7 +1601,7 @@ Global Symbols
 
 <P><STRONG><a name="[130]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[9b]"></a>main</STRONG> (Thumb, 590 bytes, Stack size 56 bytes, main_1.o(i.main))
+<P><STRONG><a name="[9b]"></a>main</STRONG> (Thumb, 582 bytes, Stack size 56 bytes, main_1.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 464<LI>Call Chain = main &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCCEx_GetD1SysClockFreq &rArr; HAL_RCC_GetSysClockFreq
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM1637_WriteTime

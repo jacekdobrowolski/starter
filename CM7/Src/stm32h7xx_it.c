@@ -35,20 +35,12 @@
 /* USER CODE BEGIN PD */
  #define GATE_ARMED_TIME 5 // Sekundy przed startem kiedy przeciecie fotoceli bedzie traktowane jako falstart
  #define NO_START_DELAY 5 // Tyle sekund po starcie jesli nie nastapilo przeciecie start uwazan jest za niewazny
- #define GATE_READY_TIME 10 // Czas przed uzbroejniem bramki w kt�rym jesli nastap przeciecie odliczanie zostaje przerwane
+ #define GATE_READY_TIME 10 // Czas przed uzbroejniem bramki w którym jesli nastapi przecięcie odliczanie zostaje przerwane
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define LED_RED_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-#define LED_RED_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-#define LED_RED_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-#define LED_GREEN_ON() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-#define LED_GREEN_TOGGLE() HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-#define LED_GREEN_OFF() HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-#define LED_YELLOW_ON() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-#define LED_YELLOW_TOGGLE() HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
-#define LED_YELLOW_OFF() HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -211,20 +203,6 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles DMA1 stream0 global interrupt.
-  */
-void DMA1_Stream0_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
-
-  /* USER CODE END DMA1_Stream0_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_uart4_rx);
-  /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
-  
-  /* USER CODE END DMA1_Stream0_IRQn 1 */
-}
-
-/**
   * @brief This function handles UART4 global interrupt.
   */
 void UART4_IRQHandler(void)
@@ -346,7 +324,8 @@ void EXTI3_IRQHandler(void)
 		}
 	}
 }
-
+/**
+ */
 void EXTI15_10_IRQHandler(void)
 {
 	__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);

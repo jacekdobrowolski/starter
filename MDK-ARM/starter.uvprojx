@@ -549,6 +549,16 @@
               <FileType>1</FileType>
               <FilePath>..\CM7\Src\TM1637.c</FilePath>
             </File>
+            <File>
+              <FileName>led_functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\led_functions.c</FilePath>
+            </File>
+            <File>
+              <FileName>led_functions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\led_functions.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1325,6 +1335,16 @@
               <FileName>TM1637.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\CM7\Src\TM1637.c</FilePath>
+            </File>
+            <File>
+              <FileName>led_functions.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\CM7\Src\led_functions.c</FilePath>
+            </File>
+            <File>
+              <FileName>led_functions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\CM7\Inc\led_functions.h</FilePath>
             </File>
           </Files>
         </Group>

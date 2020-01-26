@@ -29,34 +29,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "main.h"
-#include "TM1637.h"
 /* USER CODE END Includes */
+#include "TM1637.h"
+#include "led_functions.h"
+#include "global_variables.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-extern volatile enum SyncState { IN_SYNC,
-                                 WAITING_FOR_SYNC } gps_sync;
-extern RTC_HandleTypeDef hrtc;
-extern UART_HandleTypeDef huart3;
-extern UART_HandleTypeDef huart6;
-extern TM1637_TypeDef display_clock;
-extern TM1637_TypeDef display_counter;
-extern volatile RTC_TimeTypeDef time;
-volatile RTC_TimeTypeDef start_time;
-extern volatile RTC_DateTypeDef date;
-extern volatile enum StarterMode { AUTO_START,
-                                   EXTERNAL,
-                                   SETUP,
-                                   INIT } starter_mode;
-extern volatile enum StartState { GATE_OPEN,
-                                  GATE_CLOSED,
-																	GATE_READY,
-                                  NO_START,
-																	FALSTART} start_state;
-extern volatile uint8_t counter;
-extern volatile uint8_t counter_reload;
-extern uint8_t rx_data[64];
-extern void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date);
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
