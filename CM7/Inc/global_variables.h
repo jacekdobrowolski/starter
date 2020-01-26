@@ -14,52 +14,52 @@
 /**
  * Uchwyt do peryferium zegara czasu rzeczywistego
  */
-RTC_HandleTypeDef hrtc;
+extern RTC_HandleTypeDef hrtc;
 
 /**
  * Uchwyt do peryferium uart połączonego z modułem GPS
  */
-UART_HandleTypeDef huart4;
+extern UART_HandleTypeDef huart4;
 
 /**
  * Uchwyt do peryferium uart połączonego z STLINK
  */
-UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart3;
 
 /**
- * Uchwyt do peryferioum uart połączonego z modułem WiFi
+ * Uchwyt do peryferium uart połączonego z modułem WiFi
  */
-UART_HandleTypeDef huart6;
+extern UART_HandleTypeDef huart6;
 
 /**
  * Uchwyt do wyświetlacza LED wyświetlającego godzinę
  */
-TM1637_TypeDef display_clock;
+extern TM1637_TypeDef display_clock;
 
 /**
  * Uchwyt do wyświetlacza z odliczaniem do startu
  */
-TM1637_TypeDef display_counter;
+extern TM1637_TypeDef display_counter;
 
 /**
- * Struktura przechowywująca czas
+ * Struktura przechowująca czas
  */
-volatile RTC_TimeTypeDef time = {0};
+extern volatile RTC_TimeTypeDef time;
 
 /**
- * Struktura przechowywująca czas ostatniego startu
+ * Struktura przechowująca czas ostatniego startu
  */
-volatile RTC_TimeTypeDef start_time = {0};
+extern volatile RTC_TimeTypeDef start_time;
 
 /**
  * Struktura przechowywująca datę
  */
-volatile RTC_DateTypeDef date = {0};
+extern volatile RTC_DateTypeDef date;
 
 /**
  * Enumerator określający stan synchronizacji
  */
-volatile enum SyncState{
+extern volatile enum SyncState{
     /*! Zegar zsynchronizowany z czasem UTC*/
     IN_SYNC,
     /*! Zegar czeka na synchronizację */
@@ -71,7 +71,7 @@ volatile enum SyncState{
 /**
  * Enumerator określający tryb pracy startera
  */
-volatile enum StarterMode{
+extern volatile enum StarterMode{
     /*!  Wyzwalanie automatyczne co 30 lub 60 sekund w zależności od ::counter_reload */
     AUTO_START,
     /*!  Wyzwalanie z przycisku użytkownika */
@@ -81,20 +81,20 @@ volatile enum StarterMode{
     /*!  Inicjalizacja */
     INIT
     }
-    /*! przechwouje tryb pracy startera */
+    /*! Przechowuje tryb pracy startera */
     starter_mode;
 
 /**
- * Enumerator okjreślający stan startu
+ * Enumerator określający stan startu
  */
-volatile enum StartState{
+extern volatile enum StartState{
     /*! Bramka otwarta zawodnik może startować przecięcie zostanie uznane za start */
     GATE_OPEN,
-    /*! Bramka zamknięta przcięcie w tym momencie spowoduje falstart */
+    /*! Bramka zamknięta przecięcie w tym momencie spowoduje falstart */
     GATE_CLOSED,
     /*! Bramka jest przygotowana do startu jeśli w tym momencie nastąpi
-        przecięcie odliczanie zacznie się odpoczątku i zapali się czerwona
-        dioda sygnalizująca usterke fotokomórki */
+        przecięcie, odliczanie zacznie się od początku i zapali się czerwona
+        dioda */
     GATE_READY,
     /*! Bramka jest w spoczynku przecięcie zostanie zignorowane */
     NO_START,
@@ -107,16 +107,16 @@ volatile enum StartState{
 /**
  * Główny licznik odlicza czas do startu
  */
-volatile uint8_t counter;
+extern volatile uint8_t counter;
 
 /**
  * Wartość do której przeładowywuje się główny licznik ::counter
  */
-volatile uint8_t counter_reload;
+extern volatile uint8_t counter_reload;
 
 /**
  * Bufor do którego przechwytywane są komunikaty z modułu GPS
  */
-uint8_t rx_data[64];
+extern uint8_t rx_data[64];
 
 #endif //  GLOBAL_VARIABLES_H

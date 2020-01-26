@@ -24,7 +24,7 @@
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
-extern DMA_HandleTypeDef hdma_uart4_rx;
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
@@ -152,6 +152,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 
     /* UART4 DMA Init */
     /* UART4_RX Init */
+		/*
     hdma_uart4_rx.Instance = DMA1_Stream0;
     hdma_uart4_rx.Init.Request = DMA_REQUEST_UART4_RX;
     hdma_uart4_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
@@ -168,7 +169,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     }
 
     __HAL_LINKDMA(huart,hdmarx,hdma_uart4_rx);
-
+		*/
     /* UART4 interrupt Init */
     HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(UART4_IRQn);

@@ -2,7 +2,8 @@
   ******************************************************************************
   * @file           led_functions.h
   * @authors        Filip Kulik, Jacek Dobrowolski
-  * @brief          Plik naglowkowy z funkcjami do sterowania LED na płytce nucleo
+  * @brief          Plik naglowkowy z funkcjami do sterowania LED na płytce nucleo.
+  *                 implementacja w pliku led_functions.c
   ******************************************************************************
   */
 

@@ -40,3 +40,5 @@ starter_cm7\stm32h7xx_it_1.o: ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/TM1637.h
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/led_functions.h
 starter_cm7\stm32h7xx_it_1.o: ../CM7/Inc/global_variables.h
+starter_cm7\stm32h7xx_it_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+starter_cm7\stm32h7xx_it_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

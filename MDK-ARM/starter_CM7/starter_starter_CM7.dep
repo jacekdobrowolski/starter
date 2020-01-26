@@ -5,7 +5,7 @@ F (startup_stm32h755xx_CM4.s)(0x5E2CC688)()
 F (../CM4/Src/main.c)(0x5E2CC687)()
 F (../CM4/Src/stm32h7xx_it.c)(0x5E2CC687)()
 F (../CM4/Src/stm32h7xx_hal_msp.c)(0x5E2CC687)()
-F (../CM7/Src/main.c)(0x5E2CF313)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\main_1.o --omf_browse starter_cm7\main_1.crf --depend starter_cm7\main_1.d)
+F (../CM7/Src/main.c)(0x5E2DB140)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\main_1.o --omf_browse starter_cm7\main_1.crf --depend starter_cm7\main_1.d)
 I (../CM7/Inc/main.h)(0x5E2CF1D6)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x5E2CC687)
 I (../CM7/Inc/stm32h7xx_hal_conf.h)(0x5E2CC687)
@@ -46,11 +46,11 @@ I (../CM7/Inc/TM1637.h)(0x5E2CF500)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5D9B348A)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5D9B348A)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5D9B3488)
-I (../CM7/Inc/led_functions.h)(0x5E2CF70B)
-I (../CM7/Inc/global_variables.h)(0x5E2CF634)
-I (../CM7/Inc/init_functions.h)(0x5E2CF6BA)
-F (../CM7/Src/stm32h7xx_it.c)(0x5E2CF38F)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\stm32h7xx_it_1.o --omf_browse starter_cm7\stm32h7xx_it_1.crf --depend starter_cm7\stm32h7xx_it_1.d)
-I (../CM7/Inc/stm32h7xx_it.h)(0x5E2CF387)
+I (../CM7/Inc/led_functions.h)(0x5E2D982C)
+I (../CM7/Inc/global_variables.h)(0x5E2DB008)
+I (../CM7/Inc/init_functions.h)(0x5E2D97EA)
+F (../CM7/Src/stm32h7xx_it.c)(0x5E2D9E26)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\stm32h7xx_it_1.o --omf_browse starter_cm7\stm32h7xx_it_1.crf --depend starter_cm7\stm32h7xx_it_1.d)
+I (../CM7/Inc/stm32h7xx_it.h)(0x5E2D989E)
 I (../CM7/Inc/main.h)(0x5E2CF1D6)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x5E2CC687)
 I (../CM7/Inc/stm32h7xx_hal_conf.h)(0x5E2CC687)
@@ -88,9 +88,11 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h)(0x5E2CC687)
 I (../CM7/Inc/TM1637.h)(0x5E2CF500)
-I (../CM7/Inc/led_functions.h)(0x5E2CF70B)
-I (../CM7/Inc/global_variables.h)(0x5E2CF634)
-F (../CM7/Src/stm32h7xx_hal_msp.c)(0x5E2CC687)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\stm32h7xx_hal_msp_1.o --omf_browse starter_cm7\stm32h7xx_hal_msp_1.crf --depend starter_cm7\stm32h7xx_hal_msp_1.d)
+I (../CM7/Inc/led_functions.h)(0x5E2D982C)
+I (../CM7/Inc/global_variables.h)(0x5E2DB008)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5D9B3488)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5D9B348A)
+F (../CM7/Src/stm32h7xx_hal_msp.c)(0x5E2DB3E4)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\stm32h7xx_hal_msp_1.o --omf_browse starter_cm7\stm32h7xx_hal_msp_1.crf --depend starter_cm7\stm32h7xx_hal_msp_1.d)
 I (../CM7/Inc/main.h)(0x5E2CF1D6)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x5E2CC687)
 I (../CM7/Inc/stm32h7xx_hal_conf.h)(0x5E2CC687)
@@ -166,7 +168,7 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h)(0x5E2CC687)
 F (..\CM7\Src\led_functions.c)(0x5E2CE7DE)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\led_functions.o --omf_browse starter_cm7\led_functions.crf --depend starter_cm7\led_functions.d)
-I (../CM7/Inc/led_functions.h)(0x5E2CF70B)
+I (../CM7/Inc/led_functions.h)(0x5E2D982C)
 I (../Drivers/CMSIS/Device/ST/STM32H7xx/Include/stm32h755xx.h)(0x5E2CC687)
 I (../Drivers/CMSIS/Include/core_cm7.h)(0x5E2CC687)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5D9B3488)
@@ -202,11 +204,11 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h)(0x5E2CC687)
-F (..\CM7\Inc\led_functions.h)(0x5E2CF70B)()
-F (..\CM7\Inc\global_variables.h)(0x5E2CF634)()
-F (..\CM7\Inc\init_functions.h)(0x5E2CF6BA)()
-F (..\CM7\Src\init_functions.c)(0x5E2CE7CD)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\init_functions.o --omf_browse starter_cm7\init_functions.crf --depend starter_cm7\init_functions.d)
-I (../CM7/Inc/init_functions.h)(0x5E2CF6BA)
+F (..\CM7\Inc\led_functions.h)(0x5E2D982C)()
+F (..\CM7\Inc\global_variables.h)(0x5E2DB008)()
+F (..\CM7\Inc\init_functions.h)(0x5E2D97EA)()
+F (..\CM7\Src\init_functions.c)(0x5E2DB3BA)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\init_functions.o --omf_browse starter_cm7\init_functions.crf --depend starter_cm7\init_functions.d)
+I (../CM7/Inc/init_functions.h)(0x5E2D97EA)
 I (../CM7/Inc/main.h)(0x5E2CF1D6)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x5E2CC687)
 I (../CM7/Inc/stm32h7xx_hal_conf.h)(0x5E2CC687)
@@ -243,7 +245,7 @@ I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rtc_ex.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h)(0x5E2CC687)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h)(0x5E2CC687)
-I (../CM7/Inc/global_variables.h)(0x5E2CF634)
+I (../CM7/Inc/global_variables.h)(0x5E2DB008)
 I (../CM7/Inc/TM1637.h)(0x5E2CF500)
 F (../Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c)(0x5E2CC687)(--c99 -c --cpu Cortex-M7.fp.dp -D__EVAL -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../CM7/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc -I ../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_starter_CM7-IC:\Users\Jacek\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include-IC:\Users\Jacek\AppData\Local\Arm\Packs\Keil\STM32H7xx_DFP\2.3.1\Drivers\CMSIS\Device\ST\STM32H7xx\Include-D__UVISION_VERSION="529" -D_RTE_ -DCORE_CM7 -DSTM32H755xx -DCORE_CM7 -DUSE_HAL_DRIVER -DSTM32H755xx-o starter_cm7\stm32h7xx_hal_cortex.o --omf_browse starter_cm7\stm32h7xx_hal_cortex.crf --depend starter_cm7\stm32h7xx_hal_cortex.d)
 I (../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h)(0x5E2CC687)

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file           init_functions.h
   * @authors        Filip Kulik, Jacek Dobrowolski
-  * @brief          Plik naglowkowy z funkcjami inicjalizującymi peryferia
-  *                   Ten plik zawiera deklaracje funkcji inicjalizujących peryferia
+  * @brief          Plik naglowkowy z funkcjami inicjalizującymi peryferia.
+  *                 Implementacje w init_functions.c
   ******************************************************************************
   */
 
@@ -32,7 +32,7 @@ void GPIO_IR_Init(void);
 void GPIO_BUTTON_Init(void);
 
 /**
-  * @brief GPIO for onboard LED's Initialization Function
+  * @brief Inicjalizuje LED na płytce
   */
 void GPIO_LED_Init(void);
 
@@ -54,7 +54,6 @@ void MX_UART4_Init(void);
 /**
  *  Inicjalizuje przerwanie ::RTC_WKUP_IRQHandler() do wywoływania co sekundę
   * @brief Inicjalizuje RTC
-  * Enables RTC_WKUP_IRQn_Handler every second
   */
 void MX_RTC_Init(void);
 

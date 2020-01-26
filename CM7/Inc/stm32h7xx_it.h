@@ -64,33 +64,28 @@ void SysTick_Handler(void);
 /**
  * Obsługuje przerwanie UART połączonego z modulem GPS
  * Wykorzystane synchronizacji impulsu nowej sekundy
- * \retval None
  */
 void UART4_IRQHandler(void);
 
 /**
  * Obsługuje przerwania UART połączonego z modułem WiFi
- * \retval None
  */
 void USART6_IRQHandler(void);
 
 /**
  * Przerwanie wywoływane co sekunde
  * Odświeża wyświetlacze i otwiera bramkę
- * \retval None
  */
 void RTC_WKUP_IRQHandler(void);
 
 /**
  * Przerwanie generowane przez przecięcie wiązki fotokomórki
- * Kluczowe w detekcji falstartu
- * \retval None
+ * kluczowe w detekcji falstartu oraz w potwierdzaniu startu
  */
 void EXTI3_IRQHandler(void);
 
 /**
  * Przerwanie związane z przyciskiem użytownika
- * \retval None
  */
 void EXTI15_10_IRQHandler(void);
 /* USER CODE END EFP */

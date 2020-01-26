@@ -29,6 +29,7 @@
 #include <string.h>
 #include "led_functions.h"
 #include "global_variables.h"
+#include "init_functions.h"
 
 /* USER CODE END Includes */
 
@@ -48,13 +49,13 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 /**
- * Maximum allowed characters to handle by PRINT
+ * Maksymalna liczba znaków obsługiwana przez ::PRINT
  */
 #define PRINT_SIZE 30
 /**
- * makro o składni printf transmitujące po UART STLINK
+ * Makro o składni printf transmitujące po UART do STLINK liczba znaków ograniczona przez ::PRINT_SIZE
  * \param FORMAT formatowanie jak w funkcjach standardowych
- * \param ... lista wartości do foramowanego ciągu
+ * \param ... lista wartości do formatowanego ciągu
  */
 #define PRINT(FORMAT, ...) \
 	char str[PRINT_SIZE]; \
@@ -63,43 +64,28 @@
 
 /* USER CODE END PM */
 /* Private variables ---------------------------------------------------------*/
+RTC_HandleTypeDef hrtc;
+UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart3;
+UART_HandleTypeDef huart6;
+
+TM1637_TypeDef display_clock;
+TM1637_TypeDef display_counter;
+
+volatile RTC_TimeTypeDef time = {0};
+volatile RTC_TimeTypeDef start_time = {0};
+volatile RTC_DateTypeDef date = {0};
+
+volatile enum SyncState gps_sync = WAITING_FOR_SYNC;
+volatile enum StarterMode starter_mode = INIT;
+volatile enum StartState start_state = NO_START;
+
+volatile uint8_t counter = 30;
+volatile uint8_t counter_reload;
+
+uint8_t rx_data[64];
 
 
-/* USER CODE END PV */
-
-#include "init_functions.h"
-
-/* Private function prototypes -----------------------------------------------*/
-
-
-
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/**
- * Wysyła podany czas poprzez socket oraz zapisauje na karcie SD
- * \param time czas który zostanie wysłany
- * \param date o nazwie zależnej od daty zostanie stworzony plik na karcie SD
- */
-void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
-	{
-		char time_string[14];
-		uint8_t millis = (float) 1000*(1023-time->SubSeconds)/1024.0f;
-		sprintf(time_string, "%.2d:%.2d:%.2d.%.3d,\n", time->Hours, time->Minutes, time->Seconds, millis);
-		char data[30];
-		sprintf(data, "AT+S.SOCKDW=0,0,%d\r%s", strlen(time_string), time_string);
-		HAL_UART_Transmit(&huart6, (uint8_t*) data , strlen(data), 100);
-		char data1[30];
-
-		char date_string[10];
-		sprintf(date_string, "%d.%d.%d", date->Date, (uint8_t)date->Month, date->Year);
-		sprintf(data1, "AT+S.FSC=0:/%s,%d\r%s", date_string, strlen(time_string), time_string);
-		HAL_UART_Transmit(&huart6, (uint8_t*) data1 , strlen(data1), 100);
-	}
 /* USER CODE END 0 */
 
 /**
