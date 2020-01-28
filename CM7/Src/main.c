@@ -49,6 +49,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 /**
+	* Czas na wybór trybu pracy
+	*/
+#define SETUP_DELAY 30
+/**
  * Maksymalna liczba znaków obsługiwana przez ::PRINT
  */
 #define PRINT_SIZE 30
@@ -85,6 +89,8 @@ volatile enum StartState start_state = NO_START;
 
 volatile uint8_t counter = 30;
 volatile uint8_t counter_reload;
+
+char date_string[10] = "no_sync";
 
 uint8_t rx_data[64];
 
@@ -161,8 +167,6 @@ Error_Handler();
 	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD);
 	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 
-
-
 	MX_RTC_Init();
 	LED_GREEN_ON();
 	// Starter mode selection
@@ -174,7 +178,7 @@ Error_Handler();
 
 	HAL_NVIC_DisableIRQ(USART6_IRQn);
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
-	while(time.Seconds != 15)
+	while(time.Seconds != SETUP_DELAY)
 	{
 		__nop();
 	}
@@ -217,6 +221,8 @@ Error_Handler();
 	}
 	PRINT("%.2d:%.2d:%.2d\t%d-%d-%d", time.Hours, time.Minutes, time.Seconds, date.Date, date.Month, date.Year);
 	time.Hours = (time.Hours+1)%24; // UTC -> polski czas zimowy
+	
+	sprintf(date_string, "%d.%d.%d", date.Date, (uint8_t)date.Month, date.Year);
 	HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
 	HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
 
@@ -233,8 +239,8 @@ Error_Handler();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);
 
 	//Bez tego sie psuje
-	TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD);
-	TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
+	//TM1637_Init(&display_clock, GPIO_PIN_0, GPIO_PIN_1, GPIOD);
+	//TM1637_Init(&display_counter, GPIO_PIN_14, GPIO_PIN_15, GPIOF);
 
   while (1)
   {

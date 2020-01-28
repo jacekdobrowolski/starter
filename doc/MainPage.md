@@ -45,7 +45,3 @@ W czasie prac napotkaliśmy kilka problemów
 
 - Miganie diody zamienione na przełączanie lub ciągłe świecenie
 - Brak zdalnego wyboru trybu pracy.
-
-
-
-

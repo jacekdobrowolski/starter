@@ -118,5 +118,10 @@ extern volatile uint8_t counter_reload;
  * Bufor do którego przechwytywane są komunikaty z modułu GPS
  */
 extern uint8_t rx_data[64];
+		
+/**
+	* Ciąg przechowywujący datę
+	*/
+extern char date_string[10];
 
 #endif //  GLOBAL_VARIABLES_H

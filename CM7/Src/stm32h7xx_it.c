@@ -222,8 +222,6 @@ void send_time(volatile RTC_TimeTypeDef* time, volatile RTC_DateTypeDef* date)
 		HAL_UART_Transmit(&huart6, (uint8_t*) data , strlen(data), 100);
 		char data1[30];
 
-		char date_string[10];
-		sprintf(date_string, "%d.%d.%d", date->Date, (uint8_t)date->Month, date->Year);
 		sprintf(data1, "AT+S.FSC=0:/%s,%d\r%s", date_string, strlen(time_string), time_string);
 		HAL_UART_Transmit(&huart6, (uint8_t*) data1 , strlen(data1), 100);
 	}
@@ -243,9 +241,6 @@ void UART4_IRQHandler(void)
 
 void USART6_IRQHandler(void)
 {
-	uint8_t* pdata;
-	HAL_UART_Receive_IT(&huart6, pdata, 1);
-	HAL_UART_Transmit_IT(&huart3, pdata , 1);
 	HAL_UART_IRQHandler(&huart6);
 }
 
@@ -262,7 +257,7 @@ void RTC_WKUP_IRQHandler(void)
 	{
 		counter--;
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
 		if(counter == GATE_ARMED_TIME)
 		{
 			start_state = GATE_CLOSED;
@@ -298,7 +293,7 @@ void RTC_WKUP_IRQHandler(void)
 			counter--;
 		}
 		TM1637_WriteTime(&display_clock, time.Hours, time.Minutes, TM1637_SEPARATOR_ON);
-		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
 		if(counter == 0 && start_state == GATE_OPEN)
 		{
 			LED_GREEN_ON();
@@ -356,10 +351,6 @@ void EXTI15_10_IRQHandler(void)
 	}
 	else if(starter_mode == SETUP)
 	{
-		time.Seconds = 0;
-		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-		HAL_RTC_SetDate(&hrtc, (RTC_DateTypeDef*) &date, RTC_FORMAT_BIN);
-
 		if(counter == 30) {
 			counter = 60;
 		}else if(counter == 60) {
@@ -367,7 +358,7 @@ void EXTI15_10_IRQHandler(void)
 		} else if(counter == 3) {
 			counter = 30;
 		}
-		TM1637_WriteTime(&display_counter, time.Seconds, counter, TM1637_SEPARATOR_ON);
+		TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
 	}
 }
 
