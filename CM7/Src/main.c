@@ -76,8 +76,11 @@ volatile RTC_TimeTypeDef time = {0};
 volatile RTC_TimeTypeDef start_time = {0};
 volatile RTC_DateTypeDef date = {0};
 
+/*! przechowuje stan synchronizacji zegara z czasem UTC */
 volatile enum SyncState gps_sync = WAITING_FOR_SYNC;
+/*! Przechowuje tryb pracy startera */
 volatile enum StarterMode starter_mode = INIT;
+/*!  Przechowuje stan startu */
 volatile enum StartState start_state = NO_START;
 
 volatile uint8_t counter = 30;
