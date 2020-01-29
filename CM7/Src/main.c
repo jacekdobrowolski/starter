@@ -34,7 +34,7 @@
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
-
+#define MODE_SELECT_DELAY 25
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
  
@@ -194,9 +194,8 @@ Error_Handler();
 	TM1637_WriteTime(&display_clock, 88, 88, TM1637_SEPARATOR_ON);
 	TM1637_WriteTime(&display_counter, 00, counter, TM1637_SEPARATOR_ON);
 	
-	HAL_NVIC_DisableIRQ(USART6_IRQn);
 	HAL_UART_Transmit(&huart6, (uint8_t *) "AT+S.RESET\n\r", 12, 100);
-	while(time.Seconds != 15)
+	while(time.Seconds != MODE_SELECT_DELAY)
 	{
 		__nop();
 	}
@@ -244,14 +243,12 @@ Error_Handler();
 	while(gps_sync == WAITING_FOR_SYNC) // czekamy na synchronizacje
 	{
 		__nop();
+	}
 	HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
-	send_time( (RTC_TimeTypeDef*) &time, &date);
-	LED_RED_ON();
 	gps_sync = WAITING_FOR_SYNC;
 	__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE);
 	
-	}
 	__HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE); // niepotrzebujemy juz tego przerwania po synchronizacji
 	__HAL_RCC_UART4_CLK_DISABLE();
 	__HAL_RTC_WRITEPROTECTION_ENABLE(&hrtc);

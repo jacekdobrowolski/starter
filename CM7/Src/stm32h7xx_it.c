@@ -358,10 +358,6 @@ void EXTI15_10_IRQHandler(void)
 	}
 	else if(starter_mode == SETUP)
 	{
-		time.Seconds = 0;
-		HAL_RTC_SetTime(&hrtc, (RTC_TimeTypeDef*) &time, RTC_FORMAT_BIN);
-		HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
-		
 		if(counter == 30) {
 			counter = 60;
 		}else if(counter == 60) {

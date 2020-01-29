@@ -76,7 +76,7 @@ void TM1637_WriteByte(TM1637_TypeDef *display, unsigned char oneByte)
 void TM1637_setBrightness(TM1637_TypeDef *display, unsigned char brightness)
 {
 	TM1637_Start(display);   
-	TM1637_WriteByte(display, i);
+	TM1637_WriteByte(display, brightness);
 	TM1637_Ask(display);   
 	TM1637_Stop(display); 
 }
